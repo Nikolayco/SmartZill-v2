@@ -14,11 +14,21 @@ if platform.system() == "Windows":
             vlc_local_path = str(local_vlc_dir)
             
     if vlc_local_path and os.path.exists(vlc_local_path):
-        # Python 3.8+ için DLL dizini ekle
-        if hasattr(os, 'add_dll_directory'):
-            os.add_dll_directory(vlc_local_path)
+        dll_path = os.path.join(vlc_local_path, "libvlc.dll")
+        if os.path.exists(dll_path):
+            print(f"[*] Portatif VLC yukleniyor: {vlc_local_path}")
+            # python-vlc için yolu ayarla
+            os.environ["PYTHON_VLC_LIB_PATH"] = dll_path
+            
+            # Python 3.8+ için DLL dizini ekle (bağımlılıklar için)
+            if hasattr(os, 'add_dll_directory'):
+                os.add_dll_directory(vlc_local_path)
+            else:
+                os.environ['PATH'] = vlc_local_path + os.pathsep + os.environ['PATH']
         else:
-            os.environ['PATH'] = vlc_local_path + os.pathsep + os.environ['PATH']
+            print(f"[!] UYARI: Portatif klasor bulundu ama libvlc.dll yok: {vlc_local_path}")
+    else:
+        print("[*] Sistem VLC kullaniliyor (Standart yollar)")
 
 import vlc
 import time
