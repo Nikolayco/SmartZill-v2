@@ -1,29 +1,29 @@
 # NikolayCo SmartZill v2.0 - Bağımlılıklar
 
 # Web sunucu
-fastapi==0.109.0
-uvicorn[standard]==0.27.0
-python-multipart==0.0.6
-jinja2==3.1.3
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+jinja2>=3.1.3
 
 # Ses işleme
-python-vlc==3.0.18122
-yt_dlp
+python-vlc>=3.0.18122
+yt_dlp>=2025.01.01
 
 # Zamanlayıcı
-apscheduler==3.10.4
+apscheduler>=3.10.4
 
 # TTS (Metin-Ses)
-edge-tts==6.1.9
+edge-tts>=6.1.9
 
 # Tatil günleri
-holidays==0.40
+holidays>=0.40
 
 # Excel/CSV işleme
-openpyxl==3.1.2
-pandas>=2.1.0
+openpyxl>=3.1.2
+pandas>=2.2.0
 
 # Diğer
-aiofiles==23.2.1
-websockets==12.0
-pydantic==2.5.3
+aiofiles>=23.2.1
+websockets>=12.0
+pydantic>=2.10.0

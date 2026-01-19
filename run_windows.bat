@@ -43,9 +43,16 @@ del vlc-installer.exe
 REM Install dependencies
 echo [*] Bagimliliklar kontrol ediliyor...
 pip install -r requirements.txt
+if errorlevel 1 (
+    echo [!] HATA: Bagimliliklar yuklenemedi. 
+    echo [!] Lutfen internet baglantinizi ve Python surumunuzu kontrol edin.
+    pause
+    exit /b
+)
 
 REM Start App
 echo [!] Uygulama baslatiliyor...
 python smartzill.py
+
 
 pause
