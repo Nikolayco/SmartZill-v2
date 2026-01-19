@@ -362,7 +362,6 @@ async def list_sounds(category: str):
         if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a"):
             files.append({
                 "name": f.name,
-                "path": str(f),
                 "size": f.stat().st_size
             })
     

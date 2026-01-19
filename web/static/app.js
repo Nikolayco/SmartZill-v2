@@ -771,6 +771,14 @@ function addActivity() {
         }
     });
 
+    // Ardışık duyuru listelerini doldur
+    loadAnnouncementOptions().then(opts => {
+        const startSelect = document.getElementById('activity-start-announcement');
+        const endSelect = document.getElementById('activity-end-announcement');
+        if (startSelect) startSelect.innerHTML = opts;
+        if (endSelect) endSelect.innerHTML = opts;
+    });
+
     document.getElementById('activity-modal').classList.add('open');
 }
 
@@ -786,13 +794,22 @@ async function loadBellOptions() {
     return bells;
 }
 
+// Duyuru seçeneklerini yükleyen genel fonksiyon
+async function loadAnnouncementOptions() {
+    const announcements = await api('/api/sounds/announcements') || [];
+    return '<option value="">Ardışık Duyuru Seç (2sn Sonra)</option>' +
+        announcements.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+}
+
+
 // Duyuru slotu ekle
 async function addAnnouncementSlot() {
     const announcementsContainer = document.getElementById('announcements-list');
-    const announcements = await api('/api/sounds/announcements');
+    const announcementsOpts = await loadAnnouncementOptions();
 
-    const announcementOpts = '<option value="">Duyuru Seçin</option>' +
-        (announcements || []).map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+    // Duyuru Seçin seçeneğini ekle (custom for slot)
+    const slotOpts = announcementsOpts.replace('Ardışık Duyuru Seç (2sn Sonra)', 'Duyuru Seçin');
+
 
     // Calculate default time
     let defaultTime = '';
@@ -816,7 +833,7 @@ async function addAnnouncementSlot() {
     const slotHTML = `
         <div class="announcement-slot" data-slot-id="${slotId}">
             <input type="time" class="input" value="${defaultTime}" placeholder="Saat">
-            <select class="input">${announcementOpts}</select>
+            <select class="input">${slotOpts}</select>
             <button type="button" class="btn-square-control play-btn" onclick="playAnnouncementPreview('${slotId}')" title="Dinle">▶️</button>
             <button type="button" class="btn-square-control stop-btn" onclick="stopAnnouncementPreview()" title="Durdur">⏹️</button>
             <button type="button" class="btn-square-control delete-btn" onclick="removeAnnouncementSlot('${slotId}')" title="Sil">🗑️</button>
@@ -891,10 +908,7 @@ function editActivity(id) {
     });
 
     // Ardışık duyuruları yükle
-    api('/api/sounds/announcements').then(announcements => {
-        const opts = '<option value="">Ardışık Duyuru Seç (2sn Sonra)</option>' +
-            (announcements || []).map(a => `<option value="${a.name}">${a.name}</option>`).join('');
-
+    loadAnnouncementOptions().then(opts => {
         const startSelect = document.getElementById('activity-start-announcement');
         const endSelect = document.getElementById('activity-end-announcement');
 
@@ -908,6 +922,7 @@ function editActivity(id) {
         }
     });
 
+
     // Duyuruları yükle
     const announcementsContainer = document.getElementById('announcements-list');
     announcementsContainer.innerHTML = '';
@@ -919,21 +934,20 @@ function editActivity(id) {
         });
 
         sortedAnnouncements.forEach(ann => {
-            api('/api/sounds/announcements').then(announcements => {
-                const announcementOpts = '<option value="">Duyuru Seçin</option>' +
-                    (announcements || []).map(a => `<option value="${a.name}">${a.name}</option>`).join('');
-
+            loadAnnouncementOptions().then(opts => {
+                const slotOpts = opts.replace('Ardışık Duyuru Seç (2sn Sonra)', 'Duyuru Seçin');
                 const slotId = `announcement-${Date.now()}-${Math.random()}`;
                 const slotHTML = `
                     <div class="announcement-slot" data-slot-id="${slotId}">
                         <input type="time" class="input" value="${ann.time}" placeholder="Saat">
-                        <select class="input">${announcementOpts}</select>
-                        <button type="button" class="play-btn" onclick="playAnnouncementPreview('${slotId}')" title="Dinle">▶️</button>
-                        <button type="button" class="stop-btn" onclick="stopAnnouncementPreview()" title="Durdur">⏹️</button>
-                        <button type="button" class="delete-btn" onclick="removeAnnouncementSlot('${slotId}')" title="Sil">🗑️</button>
+                        <select class="input">${slotOpts}</select>
+                        <button type="button" class="btn-square-control play-btn" onclick="playAnnouncementPreview('${slotId}')" title="Dinle">▶️</button>
+                        <button type="button" class="btn-square-control stop-btn" onclick="stopAnnouncementPreview()" title="Durdur">⏹️</button>
+                        <button type="button" class="btn-square-control delete-btn" onclick="removeAnnouncementSlot('${slotId}')" title="Sil">🗑️</button>
                     </div>
                 `;
                 announcementsContainer.insertAdjacentHTML('beforeend', slotHTML);
+
 
                 // Seçili duyuruyu ayarla
                 const lastSlot = announcementsContainer.lastElementChild;

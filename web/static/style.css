@@ -2025,8 +2025,8 @@ input[type="range"]::-moz-range-thumb {
 
 /* Standardized Square Control Buttons */
 .btn-square-control {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2034,12 +2034,12 @@ input[type="range"]::-moz-range-thumb {
     border: none;
     cursor: pointer;
     background: transparent;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     transition: var(--transition);
-    flex-shrink: 0;
-    /* Prevent shrinking */
+    flex-shrink: 0; /* Prevent shrinking */
     padding: 0;
 }
+
 
 .btn-square-control:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -2070,26 +2070,22 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .btn-square-control.delete-btn {
-    color: var(--danger);
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.2);
+    color: var(--danger) !important;
+    background: rgba(255, 107, 107, 0.1) !important;
+    border: 1px solid rgba(255, 107, 107, 0.3) !important;
 }
 
 .btn-square-control.delete-btn:hover {
-    background: var(--danger);
-    color: #fff;
+    background: var(--danger) !important;
+    color: #fff !important;
     box-shadow: 0 0 10px rgba(255, 107, 107, 0.4);
 }
 
+
 .announcement-slot button {
-    /* Legacy override - ensuring we use the new class */
     padding: 0;
 }
 
-
-.announcement-slot button.delete-btn:hover {
-    color: var(--danger);
-}
 
 
 /* System Actions */
