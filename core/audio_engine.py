@@ -1,7 +1,25 @@
-"""
-NikolayCo SmartZill v2.0 - Ses Motoru
-VLC tabanlı çok kanallı ses yönetimi
-"""
+import os
+import sys
+import platform
+from pathlib import Path
+
+# Proje kök dizinini ve VLC yolunu ayarla
+ROOT = Path(__file__).parent.parent.resolve()
+if platform.system() == "Windows":
+    # Öncelik: Çevre değişkeni -> Proje içi bin/vlc -> Standart yollar
+    vlc_local_path = os.environ.get("SMARTZILL_VLC_PATH")
+    if not vlc_local_path:
+        local_vlc_dir = ROOT / "bin" / "vlc"
+        if local_vlc_dir.exists():
+            vlc_local_path = str(local_vlc_dir)
+            
+    if vlc_local_path and os.path.exists(vlc_local_path):
+        # Python 3.8+ için DLL dizini ekle
+        if hasattr(os, 'add_dll_directory'):
+            os.add_dll_directory(vlc_local_path)
+        else:
+            os.environ['PATH'] = vlc_local_path + os.pathsep + os.environ['PATH']
+
 import vlc
 import time
 import threading

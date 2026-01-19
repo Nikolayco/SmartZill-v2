@@ -28,16 +28,25 @@ echo [*] Paket aracları guncelleniyor...
 python -m pip install --upgrade pip setuptools wheel -q
 
 REM VLC Check
+set "VLC_LOCAL=%~dp0bin\vlc\vlc.exe"
+if exist "%VLC_LOCAL%" (
+    set "SMARTZILL_VLC_PATH=%~dp0bin\vlc"
+    goto :vlc_ok
+)
+
 set "VLC_PATH=%ProgramFiles%\VideoLAN\VLC\vlc.exe"
 if exist "%VLC_PATH%" goto :vlc_ok
 set "VLC_PATH=%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe"
 if exist "%VLC_PATH%" goto :vlc_ok
 
-echo [!] VLC Player bulunamadi! Indiriliyor...
-powershell -Command "Invoke-WebRequest -Uri 'https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.exe' -OutFile 'vlc-installer.exe'"
-echo [*] VLC Player kuruluyor...
-vlc-installer.exe /L=1055 /S
-del vlc-installer.exe
+echo [!] VLC Player bulunamadi! Portatif surum indiriliyor (Admin gerekmez)...
+if not exist "bin" mkdir "bin"
+powershell -Command "Invoke-WebRequest -Uri 'https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.zip' -OutFile 'vlc.zip'"
+echo [*] Dosyalar cikariliyor...
+powershell -Command "Expand-Archive -Path 'vlc.zip' -DestinationPath 'bin' -Force"
+move "bin\vlc-3.0.21" "bin\vlc"
+del vlc.zip
+set "SMARTZILL_VLC_PATH=%~dp0bin\vlc"
 :vlc_ok
 
 REM Install dependencies
