@@ -1,11 +1,14 @@
 @echo off
+setlocal EnableDelayedExpansion
+
+REM NikolayCo SmartZill v2.0 - Windows Boot Script
+chcp 65001 > nul
+
 if "%1"=="min" goto :start
 start /min cmd /c "%~f0" min
 exit /b
 
 :start
-REM NikolayCo SmartZill v2.0 - Windows Boot Script
-
 title SmartZill v2.0
 
 cd /d "%~dp0"
@@ -62,6 +65,5 @@ if errorlevel 1 (
 REM Start App
 echo [!] Uygulama baslatiliyor...
 python smartzill.py
-
 
 pause
