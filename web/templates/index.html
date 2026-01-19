@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NikolayCo SmartZill</title>
+    <link rel="stylesheet" href="/static/style.css?v=23">
+    <link rel="stylesheet" href="/static/tv-guide.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header (Fixed) -->
+        <!-- Unified Top Bar (Fixed) -->
+        <header class="main-top-bar">
+            <!-- Left: Navigation -->
+            <div class="nav-section">
+                <div class="nav-items-scroll">
+                    <button class="nav-btn active" data-page="dashboard" onclick="showPage('dashboard')">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Dashboard</span>
+                    </button>
+                    <button class="nav-btn" data-page="scheduler" onclick="showPage('scheduler')">
+                        <span class="nav-icon">📅</span>
+                        <span class="nav-text">Program</span>
+                    </button>
+                    <button class="nav-btn" data-page="media" onclick="showPage('media')">
+                        <span class="nav-icon">🎵</span>
+                        <span class="nav-text">Medya Player</span>
+                    </button>
+                    <button class="nav-btn" data-page="sounds" onclick="showPage('sounds')">
+                        <span class="nav-icon">🔊</span>
+                        <span class="nav-text">Ses Dosyaları</span>
+                    </button>
+                    <button class="nav-btn" data-page="special" onclick="showPage('special')">
+                        <span class="nav-icon">🎂</span>
+                        <span class="nav-text">Özel Günler</span>
+                    </button>
+                    <button class="nav-btn" data-page="settings" onclick="showPage('settings')">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Ayarlar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Info & Branding -->
+            <div class="info-section">
+
+
+                <!-- Company -->
+                <span class="top-company" id="header-company"></span>
+
+                <div class="top-separator"></div>
+
+                <!-- Branding -->
+                <div class="top-branding">
+                    <span class="top-icon">🔔</span>
+                    <div class="branding-text">
+                        <span class="top-brand">NikolayCo SmartZill</span>
+                        <span class="top-version">v2.0</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- ========== DASHBOARD ========== -->
+            <div class="page active" id="page-dashboard">
+                <div class="dashboard-grid">
+                    <!-- New: Clock and Date Card -->
+                    <div class="clock-card-dashboard">
+                        <div class="db-clock-time" id="db-clock">--:--</div>
+                        <div class="db-clock-date" id="db-date">--</div>
+                    </div>
+
+                    <!-- Next Event -->
+                    <div class="next-event-card">
+                        <div class="ne-label">⏭️ Sonraki Etkinlik</div>
+                        <div class="ne-time" id="next-time">--:--</div>
+                        <div class="ne-name" id="next-name">Etkinlik bekleniyor...</div>
+                        <div class="ne-countdown">
+                            <span class="countdown-value" id="countdown-hours">00</span>
+                            <span class="countdown-sep">:</span>
+                            <span class="countdown-value" id="countdown-mins">00</span>
+                            <span class="countdown-sep">:</span>
+                            <span class="countdown-value" id="countdown-secs">00</span>
+                        </div>
+                    </div>
+
+                    <!-- System Status (Previously Now Playing) -->
+                    <div class="now-playing-card">
+                        <div class="np-header">
+                            <span class="np-icon">📊</span>
+                            <span class="np-title">Sistem Durumu</span>
+                            <button class="scheduler-toggle-btn" id="scheduler-toggle-btn" onclick="toggleScheduler()"
+                                title="Zamanlayıcıyı geçici olarak aç/kapat">
+                                <span id="scheduler-toggle-icon">⚡</span>
+                            </button>
+                        </div>
+                        <div class="np-content" id="now-playing">İşlem bekleniyor...</div>
+                        <div class="status-inline">
+                            <span title="Bugün tatil mi?">📅 <span id="holiday-status">Çalışma Günü</span></span>
+                            <span title="Manuel player durumu">🎧 <span id="manual-music-status">Kapalı</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Controls -->
+
+                    <!-- Manual Announcement Card (Replaces Quick Controls) -->
+
+
+                    <!-- TV Guide Style Timeline -->
+                    <div class="tv-guide-container" style="grid-column: span 3;">
+                        <div class="qc-title">📅 Günlük Program</div>
+                        <div class="tv-guide-timeline" id="tv-guide-timeline">
+                            <!-- Timeline will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Manual Announcement Card (Moved Below Program) -->
+                    <div class="quick-controls-card" style="grid-column: span 3;">
+                        <div class="announcement-section">
+                            <div class="qc-title" style="margin-top:0.5rem">📢 Duyuru Alanı</div>
+                            <div class="announcement-row">
+                                <input type="text" id="tts-input" placeholder="Anons yazın..." class="input">
+                                <button class="qc-btn qc-announce" id="btn-tts-play" onclick="playTTS()"
+                                    title="Metni sesli okur">▶️</button>
+                                <button class="qc-btn qc-stop" id="btn-tts-stop" onclick="stopAnnouncement()"
+                                    title="Anonsu durdurur">⏹️</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SCHEDULER ========== -->
+            <div class="page" id="page-scheduler">
+                <div class="scheduler-header">
+                    <div class="day-tabs" id="day-tabs"></div>
+                    <div class="scheduler-actions">
+                        <button class="btn btn-secondary" onclick="copyDay()">📋 Kopyala</button>
+                        <button class="btn btn-secondary" onclick="pasteDay()">📄 Yapıştır</button>
+                    </div>
+                </div>
+
+
+
+                <div class="day-controls" id="day-controls">
+                    <div class="day-toggle">
+                        <label class="toggle">
+                            <input type="checkbox" id="day-enabled" onchange="toggleDayEnabled()">
+                            <span>Bu gün aktif</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="activities-list" id="activities-list"></div>
+                <button class="btn btn-add" onclick="addActivity()">+ Etkinlik Ekle</button>
+            </div>
+
+            <!-- ========== MEDIA PLAYER ========== -->
+            <div class="page" id="page-media">
+                <div class="media-container">
+                    <!-- Player (Sol) -->
+                    <div class="media-player-card">
+                        <h3>🎵 Manuel Medya Player</h3>
+                        <div class="player-display">
+                            <div class="now-playing-text" id="media-now-playing">Çalınmıyor</div>
+                            <div class="now-playing-source" id="media-source"></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="media-progress"></div>
+                            </div>
+                        </div>
+                        <div class="player-controls">
+                            <button class="ctrl-btn" id="btn-prev" disabled
+                                title="Playlist özelliği henüz aktif değil">⏮️</button>
+                            <button class="ctrl-btn ctrl-play" id="play-pause-btn" onclick="mediaToggle()">▶️</button>
+                            <button class="ctrl-btn" id="btn-next" disabled
+                                title="Playlist özelliği henüz aktif değil">⏭️</button>
+                            <button class="ctrl-btn" id="btn-media-stop" onclick="mediaStop()">⏹️</button>
+                        </div>
+                        <div class="volume-control">
+                            <span>🔊</span>
+                            <input type="range" min="0" max="100" value="70" id="media-volume"
+                                oninput="updateMediaVolumeLabel(this.value)" onchange="setMediaVolume(this.value)">
+                            <span class="volume-label" id="media-volume-label">70%</span>
+                        </div>
+                    </div>
+
+                    <!-- Local Music (Orta) -->
+                    <div class="music-card">
+                        <h3>📁 Yerel Müzikler</h3>
+                        <div class="music-list" id="music-list"></div>
+                    </div>
+
+                    <!-- Radio (Sağ) -->
+                    <div class="radio-card">
+                        <h3>📻 Radyolar</h3>
+                        <div class="radio-input">
+                            <input type="text" id="radio-url" placeholder="URL..." class="input">
+                            <button class="btn btn-primary" id="btn-radio" onclick="playRadio()">▶️</button>
+                        </div>
+                        <div class="radio-list" id="radio-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SOUNDS ========== -->
+            <div class="page" id="page-sounds">
+                <div class="sounds-grid">
+                    <!-- Ziller -->
+                    <div class="sound-column">
+                        <h3>🔔 Ziller</h3>
+                        <div class="upload-zone-mini" data-category="bells">
+                            <input type="file" multiple accept="audio/*" hidden>
+                            <span>📁 Dosya yükle</span>
+                        </div>
+                        <div class="sounds-list" id="sounds-bells"></div>
+                    </div>
+
+                    <!-- Anonslar -->
+                    <div class="sound-column">
+                        <h3>📢 Anonslar</h3>
+                        <div class="upload-zone-mini" data-category="announcements">
+                            <input type="file" multiple accept="audio/*" hidden>
+                            <span>📁 Dosya yükle</span>
+                        </div>
+                        <div class="sounds-list" id="sounds-announcements"></div>
+                    </div>
+
+                    <!-- Müzikler -->
+                    <div class="sound-column">
+                        <h3>🎵 Müzikler</h3>
+                        <div class="upload-zone-mini" data-category="music">
+                            <input type="file" multiple accept="audio/*" hidden>
+                            <span>📁 Dosya yükle</span>
+                        </div>
+                        <div class="sounds-list" id="sounds-music"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SPECIAL DAYS ========== -->
+            <div class="page" id="page-special">
+                <div class="special-grid">
+                    <!-- Holidays -->
+                    <div class="special-card">
+                        <h3>🎉 Resmi Tatiller</h3>
+                        <div class="holiday-settings">
+                            <div class="country-select">
+                                <label>Ülke:</label>
+                                <select id="holiday-country" class="input" onchange="setHolidayCountry()"></select>
+                            </div>
+                        </div>
+                        <div class="holidays-list" id="holidays-list"></div>
+                    </div>
+
+
+                    <!-- Birthdays -->
+                    <div class="special-card">
+                        <h3>🎂 Doğum Günleri</h3>
+                        <div class="birthday-form">
+                            <input type="text" id="person-name" placeholder="İsim Soyisim" class="input">
+                            <input type="date" id="person-date" class="input input-small">
+                            <button class="btn btn-primary" onclick="addPerson()">Ekle</button>
+                        </div>
+                        <div class="birthday-controls-row"
+                            style="display: flex; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem; width: 100%;">
+                            <div style="display:flex; gap:0.5rem; flex:1.5;">
+                                <button class="btn btn-secondary btn-sm"
+                                    onclick="location.href='/api/birthdays/template'" style="white-space:nowrap;">📥
+                                    Şablon</button>
+                                <button class="btn btn-secondary btn-sm" onclick="importBirthdays()"
+                                    style="white-space:nowrap;">📊 İçe Aktar</button>
+                            </div>
+                            <div class="birthday-sort"
+                                style="display:flex; gap:0.25rem; margin:0; flex:1; justify-content: flex-end;">
+                                <button class="btn btn-sm btn-secondary" onclick="sortBirthdays('name')">A-Z</button>
+                                <button class="btn btn-sm btn-secondary" onclick="sortBirthdays('date')">Tarih</button>
+                            </div>
+                        </div>
+
+                        <!-- Anons Saatleri -->
+                        <div class="announcement-times">
+                            <label>Doğum Günü Anons Saatleri:</label>
+                            <div class="time-inputs" style="display:flex; gap:0.5rem;">
+                                <input type="time" id="announce-time-1" class="input"
+                                    onchange="saveAnnouncementTimes()">
+                                <input type="time" id="announce-time-2" class="input"
+                                    onchange="saveAnnouncementTimes()">
+                                <input type="time" id="announce-time-3" class="input"
+                                    onchange="saveAnnouncementTimes()">
+                            </div>
+                        </div>
+
+                        <!-- Doğum Günü Mesajı -->
+                        <div class="birthday-message-section">
+                            <label>📝 Doğum Günü Anons Mesajı:</label>
+                            <textarea id="birthday-template" class="input" rows="3"
+                                placeholder="Örn: Bugün {name} isimli çalışanımızın doğum günü. Kendisine mutlu yıllar diliyoruz!"
+                                onchange="saveBirthdayTemplate()"></textarea>
+                            <p class="hint">{name} yerine kişinin adı otomatik olarak gelecektir.</p>
+                        </div>
+
+                        <div class="birthday-list" id="birthday-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== ADS (PROTECTED) ========== -->
+            <div class="page" id="page-ads">
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>🔒 Güvenli Alan</h3>
+
+                        <!-- Login Form -->
+                        <div id="ads-login-form">
+                            <p class="hint">Bu alana girmek için lütfen yönetici şifresini giriniz.</p>
+                            <div class="form-group">
+                                <label>Yönetici Şifresi</label>
+                                <input type="password" id="admin-password" class="input" placeholder="Şifre"
+                                    onkeypress="handlePasswordKeypress(event)">
+                            </div>
+                            <button class="btn btn-primary" onclick="verifyPassword()"
+                                style="width: 100%; margin-top: 1rem;">
+                                🔓 Giriş Yap
+                            </button>
+                        </div>
+
+                        <!-- Ad Settings (Hidden by default) -->
+                        <div id="ads-settings-form" style="display: none;">
+                            <h3>🤝 Destek</h3>
+                            <p class="hint">AdSense kodunuzu buraya yapıştırın. Tüm sayfalarda otomatik görünecektir.
+                            </p>
+
+                            <div class="form-group">
+                                <label>AdSense Kodu:</label>
+                                <textarea id="adsense-code" class="input" rows="10" placeholder='Örnek:
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+         crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>' style="font-family: 'Courier New', monospace; font-size: 0.85rem;"></textarea>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="saveAdSenseCode()"
+                                style="width: 100%; margin-top: 1rem;">
+                                💾 Reklam Kodunu Kaydet
+                            </button>
+
+                            <button class="btn btn-warning" onclick="logoutAds()"
+                                style="width: 100%; margin-top: 1rem;">
+                                🔒 Çıkış Yap
+                            </button>
+
+                            <p class="hint"
+                                style="margin-top: 1rem; padding: 0.75rem; background: rgba(108, 92, 231, 0.1); border-radius: 8px;">
+                                💡 <strong>İpucu:</strong> Kodu kaydettikten sonra sayfa otomatik yenilenecek ve
+                                reklamlar
+                                görünmeye başlayacak.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SETTINGS ========== -->
+            <div class="page" id="page-settings">
+                <div class="settings-grid">
+                    <!-- Company Name -->
+                    <div class="settings-card">
+                        <h3>🏢 İşletme Bilgileri</h3>
+                        <div class="form-group">
+                            <label>İşletme Adı</label>
+                            <input type="text" id="company-name" class="input" placeholder="Firma adınızı girin"
+                                onchange="saveSettings()">
+                        </div>
+                    </div>
+
+                    <!-- Startup Settings -->
+                    <div class="settings-card">
+                        <h3>🚀 Başlangıç</h3>
+                        <div class="settings-options">
+                            <label class="toggle">
+                                <input type="checkbox" id="auto-start" onchange="saveSettings()">
+                                <span>Bilgisayar açıldığında başlat</span>
+                            </label>
+                            <label class="toggle">
+                                <input type="checkbox" id="open-browser" onchange="saveSettings()">
+                                <span>Tarayıcıyı otomatik aç</span>
+                            </label>
+                            <label class="toggle">
+                                <input type="checkbox" id="startup-sound" onchange="saveSettings()">
+                                <span>Program açılınca hoşgeldin sesi çal</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Volume Settings -->
+                    <div class="settings-card">
+                        <h3>🔊 Ses Seviyeleri</h3>
+                        <div class="volume-sliders">
+                            <div class="slider-row">
+                                <label>🔔 Zil</label>
+                                <input type="range" min="0" max="100" id="vol-bell"
+                                    oninput="updateVolumeLabel('bell', this.value)"
+                                    onchange="setVolume('bell', this.value)">
+                                <span id="vol-bell-label">100%</span>
+                            </div>
+                            <div class="slider-row">
+                                <label>📢 Anons</label>
+                                <input type="range" min="0" max="100" id="vol-announcement"
+                                    oninput="updateVolumeLabel('announcement', this.value)"
+                                    onchange="setVolume('announcement', this.value)">
+                                <span id="vol-announcement-label">80%</span>
+                            </div>
+                            <div class="slider-row">
+                                <label>🎵 Mola Müziği</label>
+                                <input type="range" min="0" max="100" id="vol-music"
+                                    oninput="updateVolumeLabel('music', this.value)"
+                                    onchange="setVolume('music', this.value)">
+                                <span id="vol-music-label">60%</span>
+                            </div>
+                            <div class="slider-row">
+                                <label>🎧 Manuel Müzik</label>
+                                <input type="range" min="0" max="100" id="vol-manual"
+                                    oninput="updateVolumeLabel('manual', this.value)"
+                                    onchange="setVolume('manual', this.value)">
+                                <span id="vol-manual-label">70%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Radio Settings - Enhanced -->
+                    <div class="settings-card">
+                        <h3>📻 Mola Müziği</h3>
+                        <div class="radio-settings">
+                            <div class="form-group">
+                                <label>Mola sırasında çalacak müzik kaynağı:</label>
+                                <select id="break-music-source" class="input" onchange="updateBreakMusicSource()">
+                                    <option value="local">🎵 Yerel MP3 Dosyaları</option>
+                                </select>
+                                <p class="hint">İnternet yoksa otomatik olarak yerel müziklere geçilir</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Radio Management (New) -->
+                    <div class="settings-card">
+                        <h3>➕ Radyo Ekle</h3>
+                        <div class="form-group">
+                            <label>İstasyon Adı:</label>
+                            <input type="text" id="new-radio-name" class="input" placeholder="Örn: Niko FM">
+                        </div>
+                        <div class="form-group">
+                            <label>Yayın URL:</label>
+                            <input type="text" id="new-radio-url" class="input" placeholder="https://...">
+                        </div>
+                        <div class="form-actions" style="margin-top:1rem;">
+                            <button class="btn btn-primary full-width" onclick="addRadio()">➕ Listeye Ekle</button>
+                        </div>
+                    </div>
+
+                    <!-- TTS Settings -->
+                    <div class="settings-card">
+                        <h3>🗣️ Ses Sentezi</h3>
+                        <div class="form-group">
+                            <label>Ses Seçimi:</label>
+                            <select id="tts-voice" class="input" onchange="saveSettings()">
+                                <option value="tr-female">🇹🇷 Türkçe Kadın (Emel)</option>
+                                <option value="tr-male">🇹🇷 Türkçe Erkek (Ahmet)</option>
+                                <option value="en-female">🇬🇧 English Female</option>
+                                <option value="en-male">🇬🇧 English Male</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Restart -->
+                    <div class="settings-card">
+                        <h3>🔄 Yeniden Başlat</h3>
+                        <p class="hint">Uygulamayı kapatıp tekrar başlatır</p>
+                        <button class="btn btn-warning" onclick="restartApp()" style="width: 100%; margin-top: 1rem;">
+                            Uygulamayı Yeniden Başlat
+                        </button>
+                    </div>
+
+                    <!-- Shutdown -->
+                    <div class="settings-card">
+                        <h3>🔴 Kapat ve Çık</h3>
+                        <p class="hint">Tüm işlemleri sonlandırır ve uygulamayı kapatır</p>
+                        <button class="btn btn-danger" onclick="shutdownApp()" style="width: 100%; margin-top: 1rem;">
+                            Uygulamayı Tamamen Kapat
+                        </button>
+                    </div>
+
+
+
+                    <!-- Backup (Preserved at bottom) -->
+                    <div class="settings-card">
+                        <h3>💾 Yedekleme</h3>
+                        <div class="backup-buttons">
+                            <button class="btn btn-secondary" onclick="exportJSON()">📥 JSON</button>
+                            <button class="btn btn-secondary" onclick="exportExcel()">📊 Excel</button>
+                            <button class="btn btn-primary" onclick="importBackup()">📤 Yükle</button>
+                        </div>
+                    </div>
+
+                    <!-- About / Hakkında -->
+                    <div class="settings-card" style="position: relative; padding-bottom: 2rem;">
+                        <h3>ℹ️ Hakkında</h3>
+                        <div class="about-content" style="text-align: center; padding: 0.5rem;">
+                            <p style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.25rem;">Niyazi Sönmez</p>
+                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Geliştirici</p>
+                            <a href="mailto:niyazi.sonmez@gmail.com" class="btn btn-sm btn-secondary"
+                                style="display: inline-block; text-decoration: none;">
+                                📧 niyazi.sonmez@gmail.com
+                            </a>
+                            <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 1rem;">NikolayCo SmartZill v2.0</p>
+                        </div>
+                        <button onclick="showPage('ads')"
+                            style="position: absolute; bottom: 0.5rem; right: 0.5rem; background: none; border: none; font-size: 0.7rem; opacity: 0.4; cursor: pointer; color: var(--text-secondary);"
+                            title="Destek Ayarları">
+                            ⚙️ Destek
+                        </button>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </main>
+
+    <!-- Global AdSense Footer (Visible on all pages) -->
+    <footer class="adsense-footer">
+        <div class="adsense-container-global">
+            <div class="adsense-header">
+                <span class="adsense-icon">🤝</span>
+                <span class="adsense-title">Destek</span>
+            </div>
+            <div class="adsense-content">
+                <!-- 
+                    ═══════════════════════════════════════════════════════
+                    GOOGLE ADSENSE KODU BURAYA EKLENECEK
+                    ═══════════════════════════════════════════════════════
+                    
+                    Önerilen boyutlar:
+                    - 728x90 (Leaderboard Banner)
+                    - 970x90 (Large Leaderboard)
+                    - Responsive (Otomatik boyutlandırma)
+                    
+                    Örnek kullanım:
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+                         crossorigin="anonymous"></script>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-0943242990068977"
+                         data-ad-slot="4043254921"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                    ═══════════════════════════════════════════════════════
+                    -->
+
+                <!-- Demo Placeholder (AdSense kodu eklendikten sonra silinecek) -->
+                <div class="adsense-demo">
+                    <div class="adsense-demo-icon">📢</div>
+                    <div class="adsense-demo-text">Google AdSense Reklam Alanı</div>
+                    <div class="adsense-demo-size">728x90 Banner veya Responsive</div>
+                    <div class="adsense-demo-instruction">
+                        AdSense kodunuzu yukarıdaki yorum satırları arasına ekleyin
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+
+    <!-- Activity Modal -->
+    <div class="modal" id="activity-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Etkinlik</h3>
+                <button class="modal-close" onclick="closeModal('activity-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-grid">
+                    <!-- Sol Kolon: Temel Bilgiler -->
+                    <div class="modal-col-left">
+                        <div class="form-group">
+                            <label>Etkinlik Adı</label>
+                            <input type="text" id="activity-name" class="input" placeholder="Örn: Öğle Molası">
+                        </div>
+                        <!-- Row 1: Start Time & Bell -->
+                        <!-- Row 1: Start Time & Bell -->
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 0 0 140px;">
+                                <label>Başlangıç</label>
+                                <input type="time" id="activity-start" class="input">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Başlangıç Zili</label>
+                                <div class="input-group" style="margin-bottom: 0.5rem;">
+                                    <select id="activity-start-bell" class="input"></select>
+                                    <button type="button" class="btn-square-control play-btn"
+                                        onclick="previewBell('activity-start-bell')" title="Dinle">▶️</button>
+                                    <button type="button" class="btn-square-control stop-btn" onclick="stopPreview()"
+                                        title="Durdur">⏹️</button>
+                                </div>
+                                <div class="input-group">
+                                    <select id="activity-start-announcement" class="input">
+                                        <option value="">Ardışık Duyuru Seç (2sn Sonra)</option>
+                                    </select>
+                                    <button type="button" class="btn-square-control play-btn"
+                                        onclick="previewBell('activity-start-announcement')" title="Dinle">▶️</button>
+                                    <button type="button" class="btn-square-control stop-btn" onclick="stopPreview()"
+                                        title="Durdur">⏹️</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: End Time & Bell -->
+                        <!-- Row 2: End Time & Bell -->
+                        <div class="form-row">
+                            <div class="form-group" style="flex: 0 0 140px;">
+                                <label>Bitiş</label>
+                                <input type="time" id="activity-end" class="input">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Bitiş Zili</label>
+                                <div class="input-group" style="margin-bottom: 0.5rem;">
+                                    <select id="activity-end-bell" class="input"></select>
+                                    <button type="button" class="btn-square-control play-btn"
+                                        onclick="previewBell('activity-end-bell')" title="Dinle">▶️</button>
+                                    <button type="button" class="btn-square-control stop-btn" onclick="stopPreview()"
+                                        title="Durdur">⏹️</button>
+                                </div>
+                                <div class="input-group">
+                                    <select id="activity-end-announcement" class="input">
+                                        <option value="">Ardışık Duyuru Seç (2sn Sonra)</option>
+                                    </select>
+                                    <button type="button" class="btn-square-control play-btn"
+                                        onclick="previewBell('activity-end-announcement')" title="Dinle">▶️</button>
+                                    <button type="button" class="btn-square-control stop-btn" onclick="stopPreview()"
+                                        title="Durdur">⏹️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Kolon: Ekstra Ayarlar -->
+                    <div class="modal-col-right">
+                        <!-- Music Toggle Redesign -->
+                        <div class="music-toggle-card">
+                            <div class="mt-header">
+                                <label class="custom-checkbox-detect">
+                                    <input type="checkbox" id="activity-music">
+                                    <span class="checkmark"></span>
+                                    <span class="mt-title">Etkinlik Sonrası Müzik</span>
+                                </label>
+                            </div>
+                            <p class="mt-desc">Etkinlik bittiğinde otomatik müzik yayını başlar (sonraki
+                                etkinliğe kadar).</p>
+                        </div>
+
+                        <!-- Duyurular Bölümü -->
+                        <div class="form-group"
+                            style="margin-top: 1rem; flex: 1; display: flex; flex-direction: column;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <label>📢 Zamanlanmış Duyurular</label>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="addAnnouncementSlot()">+
+                                    Ekle</button>
+                            </div>
+                            <div id="announcements-list" class="announcements-list"
+                                style="flex: 1; overflow-y: auto; min-height: 150px; max-height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('activity-modal')">İptal</button>
+                <button class="btn btn-primary" onclick="saveActivity()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal" id="custom-alert-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="alert-title">Bilgi</h3>
+                <button class="modal-close" onclick="closeModal('custom-alert-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="alert-message" style="font-size: 1rem; line-height: 1.6;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('custom-alert-modal')">Tamam</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div class="modal" id="custom-confirm-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="confirm-title">Onay</h3>
+                <button class="modal-close" onclick="closeCustomConfirm(false)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message" style="font-size: 1rem; line-height: 1.6; white-space: pre-line;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCustomConfirm(false)">İptal</button>
+                <button class="btn btn-primary" onclick="closeCustomConfirm(true)">Onayla</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=10"></script>
+</body>
+
+</html>

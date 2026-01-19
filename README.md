@@ -1,0 +1,114 @@
+# 🎵 NikolayCo SmartZill v2.0 - Automated Bell & Music Scheduler
+
+**NikolayCo SmartZill**, işyerleri, okullar ve ofisler için tasarlanmış modern, kapsamlı ve kullanıcı dostu bir **otomasyon sistemidir**. **Zilleri**, **anonsları** ve **müzik yayınlarını** tam otomatik bir şekilde yönetmenizi sağlar. Web arayüzü sayesinde yerel ağ üzerinden istenilen cihazdan kontrol edilebilir.
+
+---
+
+## 🇹🇷 Türkçe (Turkish)
+
+### 🌟 Öne Çıkan Özellikler
+
+*   **Modern Web Arayüzü:** Yönetimi kolay, sürükle-bırak destekli, tüm cihazlarla uyumlu (Mobil/Tablet/PC) HTML5/CSS3 arayüz.
+*   **Haftalık Akıllı Zamanlayıcı:** Her gün için farklı ders, mola, mesai başlangıç/bitiş saatleri ayarlama. Kopyala/Yapıştır özelliği ile hızlı programlama.
+*   **Akıllı Müzik ve Radyo Yayını:**
+    *   **Mola Müzikleri:** Mola saatlerinde belirlediğiniz klasörden otomatik müzik çalar. Mesai başladığında otomatik fade-out (yavaşça kısarak) ile durur.
+    *   **Canlı Radyo:** Yerel MP3'ler yerine favori internet radyolarınızı dinletme imkanı. Kopma durumunda otomatik yeniden bağlanma özelliği.
+    *   **Smart Start:** Uygulama açıldığında o anki saati kontrol eder; eğer mola saatindeyse müziği başlatır, değilse sessiz bekler.
+*   **Gelişmiş Sesli Anons (TTS):**
+    *   **Yapay Zeka Destekli Sesler:** Microsoft Edge TTS altyapısı ile metinlerinizi **doğal insan sesi** kalitesinde (Türkçe ve 4+ dil) anons eder.
+    *   **3 Farklı Zamanlı Duyuru:** Günlük 3 farklı saatte planlanmış otomatik duyuru yapabilme.
+    *   **Anlık Duyuru:** Yazdığınız metni anında tüm sisteme okuma.
+*   **Özel Günler ve Doğum Günleri:**
+    *   **Otomatik Kutlama:** Yüklenen personel listesinden (Excel/CSV) doğum günlerini takip eder ve belirlediğiniz saatte otomatik kutlama anonsu yapar.
+    *   **Şablon İndirme:** Kolay veri girişi için hazır Excel şablonu.
+*   **Resmi Tatil Modu:** Türkiye (veya seçilen ülke) resmi tatillerini otomatik algılar ve sistemi o günlerde sessize alır.
+*   **Sistem Yönetimi:**
+    *   **Kanal Bazlı Ses Kontrolü:** Zil, Müzik, Anons ses seviyelerini ayrı ayrı ayarlama.
+    *   **Yedekleme:** Tüm ayarları tek tıkla JSON veya Excel olarak yedekleme ve geri yükleme.
+    *   **Linux/Windows Desteği:** Her iki işletim sisteminde de sorunsuz çalışma ve başlangıçta otomatik açılma.
+
+### 📋 Gereksinimler (Prerequisites)
+
+Bu uygulamanın çalışması için sisteminizde aşağıdaki bileşenlerin yüklü olması gerekmektedir:
+
+1.  **Python 3.10 veya üzeri**: Yüklü değilse [python.org](https://www.python.org/) adresinden indirin.
+2.  **VLC Media Player**: Ses çalma motoru için gereklidir.
+    *   **Linux:** `sudo apt install vlc`
+    *   **Windows:** Başlangıç scripti otomatik kurmayı dener, ancak manuel kurulum önerilir.
+3.  **FFmpeg**: Radyo ve YT yayınları için önerilir.
+    *   **Linux:** `sudo apt install ffmpeg`
+    *   **Windows:** [Gyan.dev](https://www.gyan.dev/ffmpeg/builds/) adresinden indirip PATH'e ekleyin (Opsiyonel).
+
+### 🚀 Hızlı Kurulum
+
+
+#### 🐧 Linux (Önerilen)
+```bash
+# 1. Projeyi İndir
+git clone https://github.com/Nikolayco/SmartZill-v2.git
+cd SmartZill-v2
+
+# 2. Çalıştır
+# Script gerekli tüm kurulumları (Python, kütüphaneler) otomatik yapar.
+chmod +x run_linux.sh
+./run_linux.sh
+```
+
+#### 🪟 Windows (Adım Adım)
+**Yönetici Olarak (Run as Administrator)** başlatmanız önerilir.
+
+1. **Yöntem 1 (Git ile):**
+   ```cmd
+   git clone https://github.com/Nikolayco/SmartZill-v2.git
+   cd SmartZill-v2
+   run_windows.bat
+   ```
+
+2. **Yöntem 2 (ZIP ile):**
+   - Sağ üstteki yeşil **Code** butonundan **Download ZIP** seçeneği ile indirin.
+   - Klasöre çıkartın.
+   - `run_windows.bat` dosyasına sağ tıklayıp **Yönetici Olarak Çalıştır** deyin.
+
+### 🔑 Varsayılan Giriş Bilgileri (Default Login)
+*   **Kullanıcı Adı:** (Gerekmez / Not Required)
+*   **Şifre:** `admin` (İlk kurulumda)
+    *   *Güvenliğiniz için kurulumdan sonra ayarlardan değiştiriniz.*
+
+---
+
+## 🇬🇧 English
+
+
+### 🌟 Key Features
+
+*   **Modern Web Interface:** Easy-to-use, responsive HTML5/CSS3 interface compatible with all devices.
+*   **Smart Weekly Scheduler:** Program different schedules for each day. Copy/Paste days for quick setup.
+*   **Smart Music & Radio:**
+    *   **Break Music:** Auto-plays local music during breaks with fade-out effect.
+    *   **Live Radio:** Stream internet radio stations robustly with auto-reconnect.
+    *   **Smart Start:** Checks current time on startup; plays music if it's break time.
+*   **Advanced TTS (Text-to-Speech):**
+    *   **AI-Powered Voices:** Converts text to **Natural Human Speech** using Edge TTS engine.
+    *   **Scheduled Announcements:** Plan announcements for 3 different times daily.
+*   **Birthdays & Special Days:**
+    *   **Auto-Celebration:** Imports personnel lists (Excel) and automatically announces birthdays.
+    *   **Public Holidays:** Auto-fetches holidays and mutes the system.
+*   **System Management:**
+    *   **Individual Volume Control:** Separate volume controls for Bells, Music, and Announcements.
+    *   **Backup & Restore:** Export full configuration to JSON/Excel.
+
+---
+
+## 🛠️ Geliştirici ve Dağıtım Notları (Distribution)
+
+Eğer bu uygulamayı kendi ortamınızda paketlemek veya GitHub'da yayınlamak isterseniz:
+
+1.  **Paketleme:** `python create_release.py` komutunu çalıştırarak `releases/` klasörü altında temiz (verisiz) `.zip` ve `.tar.gz` paketleri oluşturabilirsiniz.
+2.  **Kaynak Kod:** Uygulamanın çalışması için tüm kaynak kodlar (`smartzill.py`, `core/`, `services/`, `web/`) gereklidir.
+3.  **Git:** `.gitignore` dosyası yerel ayarlarınızı (`config.json`) ve verilerinizi (`data/*.json`) paylaşmanızı önlemek üzere yapılandırılmıştır.
+
+---
+
+**Project Owner:** NikolayCo  
+**License:** MIT
+

@@ -1,0 +1,1252 @@
+{
+  "version": "2.0",
+  "created_at": "2026-01-19T16:57:09.676695",
+  "config": {
+    "company_name": "MEM Uyarı Sistemi",
+    "language": "tr",
+    "theme": "dark",
+    "volumes": {
+      "bell": 100,
+      "announcement": 100,
+      "music": 35,
+      "manual": 50
+    },
+    "tts": {
+      "engine": "edge",
+      "voice": "tr-TR-EmelNeural",
+      "rate": "+0%"
+    },
+    "radio": {
+      "enabled": true,
+      "url": "https://radyo34.radyotvonline.net/radyo34",
+      "stations": [
+        {
+          "name": "Anatolian Radyo",
+          "url": "https://www.youtube.com/watch?v=dubxvVmHOu0"
+        },
+        {
+          "name": "Kral Fm",
+          "url": "https://dygedge2.radyotvonline.net/kralfm/playlist.m3u8"
+        },
+        {
+          "name": "Power Türk",
+          "url": "https://live.powerapp.com.tr/powerturk/mpeg/icecast.audio?/;stream.mp3"
+        },
+        {
+          "name": "Radyo 34",
+          "url": "https://radyo34.radyotvonline.net/radyo34"
+        },
+        {
+          "name": "Radyo Alaturka",
+          "url": "https://yayin.jumboserver.net:9100/stream?/;stream.mp3"
+        },
+        {
+          "name": "Radyo Avrasya Türk",
+          "url": "https://sslyayin.netyayin.net:10909/;/;stream.mp3"
+        },
+        {
+          "name": "Radyo D",
+          "url": "https://moondigitaledge2.radyotvonline.net/radyod/playlist.m3u8"
+        },
+        {
+          "name": "Retro Türk",
+          "url": "https://playerservices.streamtheworld.com/api/livestream-redirect/RETROTURK128AAC.aac"
+        },
+        {
+          "name": "Show Radyo",
+          "url": "https://showradyo.radyotvonline.net/showradyoaac?/;stream.mp3"
+        },
+        {
+          "name": "Turkuvaz Radyo",
+          "url": "https://trkvz-radyolar.ercdn.net/radyoturkuvaz/playlist.m3u8"
+        },
+        {
+          "name": "Türkülerle Türkiye",
+          "url": "https://ssl4.radyotvonline.com/radyohome/turkulerleturkiye.stream_aac/playlist.m3u8"
+        }
+      ]
+    },
+    "streaming": {
+      "enabled": false,
+      "port": 8080,
+      "bitrate": 128
+    },
+    "holidays": {
+      "enabled": false,
+      "country": "TR",
+      "skip_on_holidays": true,
+      "muted_dates": [
+        "21.03.2026",
+        "22.03.2026",
+        "23.04.2026",
+        "19.05.2026",
+        "27.05.2026",
+        "28.05.2026",
+        "29.05.2026",
+        "30.05.2026",
+        "15.07.2026",
+        "30.08.2026",
+        "01.05.2026",
+        "20.03.2026",
+        "01.01.2026",
+        "29.10.2026"
+      ]
+    },
+    "startup": {
+      "auto_start": true,
+      "open_browser": true,
+      "play_startup_sound": true
+    },
+    "adsenseCode": "<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0943242990068977\"\n     crossorigin=\"anonymous\"></script>\n<!-- smartzill -->\n<ins class=\"adsbygoogle\"\n     style=\"display:block\"\n     data-ad-client=\"ca-pub-0943242990068977\"\n     data-ad-slot=\"4043254921\"\n     data-ad-format=\"auto\"\n     data-full-width-responsive=\"true\"></ins>\n<script>\n     (adsbygoogle = window.adsbygoogle || []).push({});\n</script>",
+    "security": {
+      "admin_password": ""
+    }
+  },
+  "schedule": [
+    {
+      "dayOfWeek": 0,
+      "dayName": "Pazartesi",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_4_1768235605",
+          "name": "4. Aktivite",
+          "startTime": "15:15",
+          "endTime": "17:30",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Bugünlük mesai süremiz tamamlanmıştır. Değerli emekleriniz için teşekkür eder; sevdiklerinizle birlikte huzurlu bir akşam geçirmenizi dileriz. İyi akşamlar..mp3",
+          "playMusic": false,
+          "announcements": [
+            {
+              "time": "15:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:45",
+              "soundId": "Daha huzurlu bir ortam için lütfen çalışma alanlarımızı düzenli tutalım. Gösterdiğiniz özen için teşekkür ederiz.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 1,
+      "dayName": "Salı",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_4_1768235605",
+          "name": "4. Aktivite",
+          "startTime": "15:15",
+          "endTime": "17:30",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Bugünlük mesai süremiz tamamlanmıştır. Değerli emekleriniz için teşekkür eder; sevdiklerinizle birlikte huzurlu bir akşam geçirmenizi dileriz. İyi akşamlar..mp3",
+          "playMusic": false,
+          "announcements": [
+            {
+              "time": "15:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:45",
+              "soundId": "Daha huzurlu bir ortam için lütfen çalışma alanlarımızı düzenli tutalım. Gösterdiğiniz özen için teşekkür ederiz.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 2,
+      "dayName": "Çarşamba",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_4_1768235605",
+          "name": "4. Aktivite",
+          "startTime": "15:15",
+          "endTime": "17:30",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Bugünlük mesai süremiz tamamlanmıştır. Değerli emekleriniz için teşekkür eder; sevdiklerinizle birlikte huzurlu bir akşam geçirmenizi dileriz. İyi akşamlar..mp3",
+          "playMusic": false,
+          "announcements": [
+            {
+              "time": "15:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:45",
+              "soundId": "Daha huzurlu bir ortam için lütfen çalışma alanlarımızı düzenli tutalım. Gösterdiğiniz özen için teşekkür ederiz.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 3,
+      "dayName": "Perşembe",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_4_1768235605",
+          "name": "4. Aktivite",
+          "startTime": "15:15",
+          "endTime": "17:30",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Bugünlük mesai süremiz tamamlanmıştır. Değerli emekleriniz için teşekkür eder; sevdiklerinizle birlikte huzurlu bir akşam geçirmenizi dileriz. İyi akşamlar..mp3",
+          "playMusic": false,
+          "announcements": [
+            {
+              "time": "15:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:45",
+              "soundId": "Daha huzurlu bir ortam için lütfen çalışma alanlarımızı düzenli tutalım. Gösterdiğiniz özen için teşekkür ederiz.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 4,
+      "dayName": "Cuma",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_4_1768235605",
+          "name": "4. Aktivite",
+          "startTime": "15:15",
+          "endTime": "17:30",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Bugünlük mesai süremiz tamamlanmıştır. Değerli emekleriniz için teşekkür eder; sevdiklerinizle birlikte huzurlu bir akşam geçirmenizi dileriz. İyi akşamlar..mp3",
+          "playMusic": false,
+          "announcements": [
+            {
+              "time": "15:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "16:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "17:45",
+              "soundId": "Daha huzurlu bir ortam için lütfen çalışma alanlarımızı düzenli tutalım. Gösterdiğiniz özen için teşekkür ederiz.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 5,
+      "dayName": "Cumartesi",
+      "enabled": true,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "09:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Mola süremiz sona ermiştir. Hepinize kolaylıklar ve iyi çalışmalar dileriz.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "10:16",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "11:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "Öğle arası tamamlanmıştır. Mesaimize kaldığımız yerden aynı enerjiyle devam ediyoruz. İyi çalışmalar..mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "13:01",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "13:30",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            },
+            {
+              "time": "14:30",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayOfWeek": 6,
+      "dayName": "Pazar",
+      "enabled": false,
+      "activities": [
+        {
+          "id": "1_1_1768235605",
+          "name": "1. Aktivite",
+          "startTime": "08:00",
+          "endTime": "10:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "09:00",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_2_1768235605",
+          "name": "2. Aktivite",
+          "startTime": "10:15",
+          "endTime": "12:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Öğle yemeği arası başlamıştır. Tüm çalışma arkadaşlarımıza afiyet olsun, iyi dinlenmeler..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "11:00",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        },
+        {
+          "id": "1_3_1768235605",
+          "name": "3. Aktivite",
+          "startTime": "13:00",
+          "endTime": "15:00",
+          "startSoundId": "Melodi1.mp3",
+          "endSoundId": "Melodi1.mp3",
+          "startAnnouncementId": "isg1.mp3",
+          "endAnnouncementId": "Kısa bir mola zamanı. Çay ve kahve eşliğinde güzel bir dinlenme dileriz..mp3",
+          "playMusic": true,
+          "announcements": [
+            {
+              "time": "14:00",
+              "soundId": "isg1.mp3"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "special_days": {
+    "enabled": true,
+    "announcement_times": [
+      "09:15",
+      "13:15"
+    ],
+    "template": "Bugün {name} isimli arkadaşımızın doğum günü. Kendisine sevdikleri ile birlikte mutlu yıllar diliyoruz!",
+    "people": [
+      {
+        "name": "ALİM KOCA",
+        "date": "01.05.1984"
+      },
+      {
+        "name": "CENGİZ AKBAY",
+        "date": "25.07.1994"
+      },
+      {
+        "name": "MUHAMMET ALİ ER",
+        "date": "27.08.1990"
+      },
+      {
+        "name": "EMİR GÜLER",
+        "date": "21.07.2003"
+      },
+      {
+        "name": "ERDAL BAĞIRAN",
+        "date": "14.07.1973"
+      },
+      {
+        "name": "İLKER GARİP KIŞ",
+        "date": "08.12.1981"
+      },
+      {
+        "name": "CUMALİ MERT ÖZGEN",
+        "date": "09.10.1995"
+      },
+      {
+        "name": "HASAN SAĞIRBAY",
+        "date": "01.02.1973"
+      },
+      {
+        "name": "MUSTAFA ATLI",
+        "date": "01.08.1984"
+      },
+      {
+        "name": "SONER DUMAN",
+        "date": "01.03.1981"
+      },
+      {
+        "name": "TARIK ULUSOY",
+        "date": "29.06.1976"
+      },
+      {
+        "name": "ÇETİN ARSLAN",
+        "date": "17.01.1977"
+      },
+      {
+        "name": "RAMAZAN BULUT",
+        "date": "20.06.1982"
+      },
+      {
+        "name": "ERHAN ÇUBUKÇU",
+        "date": "08.11.1983"
+      },
+      {
+        "name": "SERKAN TOĞAY",
+        "date": "12.12.1980"
+      },
+      {
+        "name": "YUNUS EMRE KARAKOYUN",
+        "date": "08.10.2004"
+      },
+      {
+        "name": "METİN TÜRK",
+        "date": "01.06.1997"
+      },
+      {
+        "name": "ALİ KEMAL MERİÇ",
+        "date": "20.07.1985"
+      },
+      {
+        "name": "HATİCE KARA",
+        "date": "20.07.1985"
+      },
+      {
+        "name": "MEHMET YILMAZ",
+        "date": "03.01.1993"
+      },
+      {
+        "name": "OĞUZ ALTUNTAŞ",
+        "date": "14.01.1989"
+      },
+      {
+        "name": "FUAT AYGÜN",
+        "date": "04.04.1980"
+      },
+      {
+        "name": "HAKAN YILMAZ",
+        "date": "30.12.1990"
+      },
+      {
+        "name": "HASAN HÜSEYİN ÖNER",
+        "date": "30.10.1979"
+      },
+      {
+        "name": "MEHMET YANAR",
+        "date": "01.01.1990"
+      },
+      {
+        "name": "RAMAZAN GÜNEY YANAR",
+        "date": "15.06.1984"
+      },
+      {
+        "name": "AHMET BERAT TOPALLAR",
+        "date": "17.06.1990"
+      },
+      {
+        "name": "SEBAHATTİN YILDIRIM",
+        "date": "18.06.1971"
+      },
+      {
+        "name": "ALİCAN POLAT",
+        "date": "13.09.1994"
+      },
+      {
+        "name": "METEHAN KURT",
+        "date": "04.02.2006"
+      },
+      {
+        "name": "CİHANGİR DEDE",
+        "date": "06.07.1977"
+      },
+      {
+        "name": "EMRE YURTSEVEN",
+        "date": "01.01.1994"
+      },
+      {
+        "name": "HASAN DAĞLAR",
+        "date": "01.10.1993"
+      },
+      {
+        "name": "İSMAİL AYDIN",
+        "date": "24.01.1982"
+      },
+      {
+        "name": "MEHMET ALİ VATANSEVER",
+        "date": "07.11.1975"
+      },
+      {
+        "name": "EMRE AVCI",
+        "date": "12.01.1997"
+      },
+      {
+        "name": "MUZAFFER KALAY",
+        "date": "01.06.1976"
+      },
+      {
+        "name": "MUSTAFA KARABACAK",
+        "date": "03.03.1994"
+      },
+      {
+        "name": "ÖMER KESKİN",
+        "date": "19.07.1996"
+      },
+      {
+        "name": "SALİH İLHAN",
+        "date": "05.08.1992"
+      },
+      {
+        "name": "SELÇUK YAKIN",
+        "date": "11.06.1983"
+      },
+      {
+        "name": "SEZGİN BAKAN",
+        "date": "24.02.1984"
+      },
+      {
+        "name": "SEZGİN EMEK",
+        "date": "23.06.1988"
+      },
+      {
+        "name": "BATUHAN AKTAŞ",
+        "date": "10.06.1996"
+      },
+      {
+        "name": "ERKAN BORUCU",
+        "date": "16.05.1977"
+      },
+      {
+        "name": "KADİR AYDIN",
+        "date": "27.08.1971"
+      },
+      {
+        "name": "MEHMET BORANOĞLU",
+        "date": "01.01.1972"
+      },
+      {
+        "name": "NİYAZİ SÖNMEZ",
+        "date": "01.07.1984"
+      },
+      {
+        "name": "OKAN TEKBAŞ",
+        "date": "15.07.1978"
+      },
+      {
+        "name": "TUNCAY YÜCEL",
+        "date": "02.06.1973"
+      },
+      {
+        "name": "SEFA BAKIR",
+        "date": "27.07.1998"
+      },
+      {
+        "name": "MEHMET ŞAŞMAZ",
+        "date": "30.07.1981"
+      },
+      {
+        "name": "ÇAĞLAR YILDIRIM",
+        "date": "16.08.1992"
+      },
+      {
+        "name": "ABDULLAH DAYIBAŞI",
+        "date": "08.08.1988"
+      },
+      {
+        "name": "ŞAHİN AŞÇI",
+        "date": "25.07.1987"
+      },
+      {
+        "name": "SERKAN ÜNVER",
+        "date": "09.05.1997"
+      },
+      {
+        "name": "HÜSEYİN ÜMİT SEVİM",
+        "date": "13.01.1974"
+      },
+      {
+        "name": "MUSTAFA UZER",
+        "date": "12.09.1991"
+      },
+      {
+        "name": "MÜMİN AVCI",
+        "date": "20.12.1970"
+      },
+      {
+        "name": "GÖKSEL AKDENİZ",
+        "date": "13.01.1981"
+      },
+      {
+        "name": "SÜLEYMAN UZEL",
+        "date": "19.08.1982"
+      },
+      {
+        "name": "HÜSEYİN TOPALOĞLU",
+        "date": "09.10.1986"
+      },
+      {
+        "name": "EGE KAYA",
+        "date": "25.04.1997"
+      },
+      {
+        "name": "ERDİ YAĞMURCA",
+        "date": "15.06.1992"
+      },
+      {
+        "name": "MUTLU ÖZCAN",
+        "date": "07.03.1969"
+      },
+      {
+        "name": "EMRE YANIK",
+        "date": "05.04.1983"
+      },
+      {
+        "name": "KARANİ GÖZÜTOK",
+        "date": "20.09.1984"
+      },
+      {
+        "name": "FATİH ACAR",
+        "date": "08.12.1984"
+      },
+      {
+        "name": "ÖZCAN AKGÜNLÜ",
+        "date": "13.04.1980"
+      },
+      {
+        "name": "HAKAN ACAR",
+        "date": "01.07.1991"
+      },
+      {
+        "name": "ÜMİT KARASU",
+        "date": "10.09.1989"
+      },
+      {
+        "name": "ÖMER YILMAZ",
+        "date": "07.02.1990"
+      },
+      {
+        "name": "MUHAMMED SOLAK",
+        "date": "19.07.1997"
+      },
+      {
+        "name": "HARUN KOYUN",
+        "date": "28.06.1999"
+      },
+      {
+        "name": "MEHMET ERDOĞAN",
+        "date": "05.06.1998"
+      },
+      {
+        "name": "MEHMET MİHRİ BERÇİN",
+        "date": "13.03.2024"
+      },
+      {
+        "name": "İDRİS ZOR",
+        "date": "01.01.1992"
+      },
+      {
+        "name": "MURAT GÜNEŞ",
+        "date": "17.02.1997"
+      },
+      {
+        "name": "İSRAFİL ŞAHİN",
+        "date": "01.06.1981"
+      },
+      {
+        "name": "MUSTAFA ACAR",
+        "date": "12.05.1982"
+      },
+      {
+        "name": "BURAK BALOĞLU",
+        "date": "11.04.1985"
+      },
+      {
+        "name": "ORÇUN ŞEN",
+        "date": "25.05.1981"
+      },
+      {
+        "name": "RIFAT KARAKAYA",
+        "date": "12.03.1974"
+      },
+      {
+        "name": "MEHMET KURTOĞLU",
+        "date": "27.07.1986"
+      },
+      {
+        "name": "MACİT TEKKUZGUN",
+        "date": "01.01.1980"
+      },
+      {
+        "name": "MEHMET DENİZ",
+        "date": "23.08.1993"
+      },
+      {
+        "name": "AHMET GÜNDÜZ",
+        "date": "28.05.1985"
+      },
+      {
+        "name": "HALİT DEMİR",
+        "date": "13.10.1991"
+      },
+      {
+        "name": "İLHAN AKSOY",
+        "date": "13.04.1983"
+      },
+      {
+        "name": "RAMAZAN DEVECİ",
+        "date": "07.07.1989"
+      },
+      {
+        "name": "TURAN YILDIZ",
+        "date": "01.03.1990"
+      },
+      {
+        "name": "VEYSEL DEMİRBİLEK",
+        "date": "20.03.1989"
+      },
+      {
+        "name": "SAMET KAFALI",
+        "date": "0502 1998"
+      },
+      {
+        "name": "MUHAMMED YILMAZ",
+        "date": "13.12.1985"
+      },
+      {
+        "name": "HÜSEYİN TEPE",
+        "date": "10.09.1995"
+      },
+      {
+        "name": "AHMET CAN UYSAL",
+        "date": "22.09.1996"
+      },
+      {
+        "name": "HÜSEYİN OLGUN",
+        "date": "08.12.2001"
+      },
+      {
+        "name": "BESTE DUMAN",
+        "date": "20.04.1997"
+      },
+      {
+        "name": "EVREN KASAP",
+        "date": "01.01.1981"
+      },
+      {
+        "name": "OKAN KIVRAKDAL",
+        "date": "28.12.2024"
+      },
+      {
+        "name": "BATUHAN BARIŞ",
+        "date": "11.06.1978"
+      },
+      {
+        "name": "ERDAL BAŞOCAK",
+        "date": "03.08.1974"
+      },
+      {
+        "name": "SEDAT AYMUTLU",
+        "date": "13.12.1992"
+      },
+      {
+        "name": "ÖZKAN SOYSAL",
+        "date": "08.04.1985"
+      },
+      {
+        "name": "İLKER ÇAĞAN",
+        "date": "02.02.1995"
+      }
+    ]
+  }
+}

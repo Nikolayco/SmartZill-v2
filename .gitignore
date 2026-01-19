@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Distribution
+dist/
+build/
+*.spec
+
+# VS Code
+.vscode/
+
+# Local Data
+data/*.json
+!data/default_config.json
+
+# Backups
+backup/
+*.json.bak
+
+
+# OS
+.DS_Store
+Thumbs.db
