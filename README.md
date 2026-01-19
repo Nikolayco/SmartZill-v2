@@ -99,16 +99,6 @@ chmod +x run_linux.sh
 
 ---
 
-## 🛠️ Geliştirici ve Dağıtım Notları (Distribution)
-
-Eğer bu uygulamayı kendi ortamınızda paketlemek veya GitHub'da yayınlamak isterseniz:
-
-1.  **Paketleme:** `python create_release.py` komutunu çalıştırarak `releases/` klasörü altında temiz (verisiz) `.zip` ve `.tar.gz` paketleri oluşturabilirsiniz.
-2.  **Kaynak Kod:** Uygulamanın çalışması için tüm kaynak kodlar (`smartzill.py`, `core/`, `services/`, `web/`) gereklidir.
-3.  **Git:** `.gitignore` dosyası yerel ayarlarınızı (`config.json`) ve verilerinizi (`data/*.json`) paylaşmanızı önlemek üzere yapılandırılmıştır.
-
----
-
 **Project Owner:** NikolayCo  
 **License:** MIT
 
