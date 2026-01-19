@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 > nul
 if not "%minimized%"=="" goto :minimized
 set minimized=true
 start /min cmd /C "%~dpnx0"
@@ -9,7 +10,9 @@ title NikolayCo SmartZill v2.0
 
 cd /d "%~dp0"
 
-echo 🔔 NikolayCo SmartZill v2.0 başlatılıyor...
+echo ==================================================
+echo   🔔 NikolayCo SmartZill v2.0 başlatılıyor...
+echo ==================================================
 
 REM Virtual environment kontrol
 if not exist ".venv" (
@@ -19,6 +22,10 @@ if not exist ".venv" (
 
 REM Aktive et
 call .venv\Scripts\activate.bat
+
+REM Pip ve araçları güncelle
+echo 🆙 Bağımlılık araçları güncelleniyor...
+python -m pip install --upgrade pip setuptools wheel -q
 
 REM VLC Kontrolü (Gerekli)
 if not exist "%ProgramFiles%\VideoLAN\VLC\vlc.exe" (
@@ -37,11 +44,9 @@ if not exist "%ProgramFiles%\VideoLAN\VLC\vlc.exe" (
 )
 
 REM Bağımlılıkları kontrol et
-python -c "import fastapi" 2>nul
-if errorlevel 1 (
-    echo 📦 Bağımlılıklar yükleniyor...
-    pip install -q -r requirements.txt
-)
+echo 📦 Bağımlılıklar kontrol ediliyor...
+pip install -r requirements.txt
+
 
 REM Uygulamayı başlat
 echo 🚀 Uygulama başlatılıyor...
