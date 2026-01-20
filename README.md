@@ -27,6 +27,16 @@
     *   **Yedekleme:** Tüm ayarları tek tıkla JSON veya Excel olarak yedekleme ve geri yükleme.
     *   **Linux/Windows Desteği:** Her iki işletim sisteminde de sorunsuz çalışma ve başlangıçta otomatik açılma.
 
+### 🛡️ Güvenlik ve Şeffaflık Bildirimi (Security Transparency)
+
+Kurumsal ağ yöneticileri ve güvenlik ekipleri için teknik detaylar:
+*   **Ağ (Network) Aktiviteleri:** Uygulama, **sadece** aşağıdaki durumlar için internete bağlanır:
+    *   **İnternet Radyosu:** Kullanıcının eklediği radyo istasyonlarını çalmak için.
+    *   **Kurulum:** Gerekli Python kütüphanelerini (`pip`) indirmek için.
+    *   **VLC İndirme:** Windows'ta VLC yüklü değilse, VideoLAN resmi sitesinden "portable" sürümü indirir.
+    *   **Veri Gizliliği:** Dışarıya hiçbir kullanım istatistiği, ses kaydı veya personel verisi gönderilmez. Tüm veriler yerel diskte saklanır.
+*   **Dosya Sistemi:** Uygulama kendi klasörü (`.venv` ve `bin/`) dışında sistem dosyalarında değişiklik yapmaz.
+
 ### 📋 Gereksinimler (Prerequisites)
 
 Bu uygulamanın çalışması için sisteminizde aşağıdaki bileşenlerin yüklü olması gerekmektedir:
@@ -96,6 +106,15 @@ chmod +x run_linux.sh
 *   **System Management:**
     *   **Individual Volume Control:** Separate volume controls for Bells, Music, and Announcements.
     *   **Backup & Restore:** Export full configuration to JSON/Excel.
+
+### 🛡️ Security & Transparency Note
+
+To assure security teams and admins, here is what the application does under the hood:
+*   **Network Activity:** The app makes outbound calls **only** for:
+    *   **Internet Radio:** Connecting to the streaming URLs you provide.
+    *   **Setup:** Downloading necessary Python packages (`pip`) or the portable VLC player if missing.
+    *   **No Telemetry:** No personal data or usage analytics are sent to external servers.
+*   **File System:** It runs within its own directory. On Windows, if VLC is missing, it downloads a portable version to a local `bin/` folder to avoid requiring system-wide installation privileges.
 
 ---
 
