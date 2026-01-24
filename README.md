@@ -2,7 +2,9 @@
 
 **NikolayCo SmartZill**, işyerleri, okullar ve ofisler için tasarlanmış modern, kapsamlı ve kullanıcı dostu bir **otomasyon sistemidir**. **Zilleri**, **anonsları** ve **müzik yayınlarını** tam otomatik bir şekilde yönetmenizi sağlar. Web arayüzü sayesinde yerel ağ üzerinden istenilen cihazdan kontrol edilebilir.
 
-| ![Dashboard](docs/screenshots/dashboard.png)
+
+<img width="1919" height="792" alt="SmartZill Dashboard" src="https://github.com/user-attachments/assets/b0507998-f557-451d-bcfa-7c75d1228646" />
+
 
 ---
 
