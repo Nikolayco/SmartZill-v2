@@ -2,6 +2,8 @@
 
 **NikolayCo SmartZill**, işyerleri, okullar ve ofisler için tasarlanmış modern, kapsamlı ve kullanıcı dostu bir **otomasyon sistemidir**. **Zilleri**, **anonsları** ve **müzik yayınlarını** tam otomatik bir şekilde yönetmenizi sağlar. Web arayüzü sayesinde yerel ağ üzerinden istenilen cihazdan kontrol edilebilir.
 
+| ![Dashboard](docs/screenshots/dashboard.png)
+
 ---
 
 ## 🇹🇷 Türkçe (Turkish)
@@ -62,6 +64,9 @@ cd SmartZill-v2
 # Script gerekli tüm kurulumları (Python, kütüphaneler) otomatik yapar.
 chmod +x run_linux.sh
 ./run_linux.sh
+# 3. Kısayol Oluştur (Opsiyonel)
+# Masaüstüne ve uygulama menüsüne şık ikonlu kısayol ekler
+./Linux_Kisayol_Olustur.sh
 ```
 
 #### 🪟 Windows (Adım Adım)
@@ -72,6 +77,9 @@ chmod +x run_linux.sh
    git clone https://github.com/Nikolayco/SmartZill-v2.git
    cd SmartZill-v2
    run_windows.bat
+   
+   # Masaüstü Kısayolu için:
+   Windows_Kisayol_Olustur.bat dosyasına çift tıklayın.
    ```
 
 2. **Yöntem 2 (ZIP ile):**
