@@ -32,6 +32,10 @@ rem Update Pip
 echo [*] Paket araclari guncelleniyor...
 python -m pip install --upgrade pip setuptools wheel -q
 
+rem Cleanup stray DLLs to prevent conflicts
+if exist "libvlc.dll" del "libvlc.dll"
+if exist "libvlccore.dll" del "libvlccore.dll"
+
 rem VLC Check
 set "VLC_LOCAL=%~dp0bin\vlc\libvlc.dll"
 if exist "%VLC_LOCAL%" (
@@ -41,9 +45,15 @@ if exist "%VLC_LOCAL%" (
 
 rem Standart paths
 set "VLC_PATH=%ProgramFiles%\VideoLAN\VLC\vlc.exe"
-if exist "%VLC_PATH%" goto :vlc_ok
+if exist "%VLC_PATH%" (
+    set "SMARTZILL_VLC_PATH=%ProgramFiles%\VideoLAN\VLC"
+    goto :vlc_ok
+)
 set "VLC_PATH=%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe"
-if exist "%VLC_PATH%" goto :vlc_ok
+if exist "%VLC_PATH%" (
+    set "SMARTZILL_VLC_PATH=%ProgramFiles(x86)%\VideoLAN\VLC"
+    goto :vlc_ok
+)
 
 echo [!] VLC Player bulunamadi! Portatif surum indiriliyor...
 if not exist "bin" mkdir "bin"

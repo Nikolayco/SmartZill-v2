@@ -16,7 +16,7 @@ if platform.system() == "Windows":
     if vlc_local_path and os.path.exists(vlc_local_path):
         dll_path = os.path.join(vlc_local_path, "libvlc.dll")
         if os.path.exists(dll_path):
-            print(f"[*] Portatif VLC yukleniyor: {vlc_local_path}")
+            print(f"[*] VLC yukleniyor: {vlc_local_path}")
             # python-vlc için yolu ayarla
             os.environ["PYTHON_VLC_LIB_PATH"] = dll_path
             
