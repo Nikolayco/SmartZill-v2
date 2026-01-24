@@ -49,11 +49,6 @@ if exist "%VLC_PATH%" (
     set "SMARTZILL_VLC_PATH=%ProgramFiles%\VideoLAN\VLC"
     goto :vlc_ok
 )
-set "VLC_PATH=%ProgramFiles(x86)%\VideoLAN\VLC\vlc.exe"
-if exist "%VLC_PATH%" (
-    set "SMARTZILL_VLC_PATH=%ProgramFiles(x86)%\VideoLAN\VLC"
-    goto :vlc_ok
-)
 
 echo [!] VLC Player bulunamadi! Portatif surum indiriliyor...
 if not exist "bin" mkdir "bin"
