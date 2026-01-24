@@ -1,7 +1,5 @@
 @echo off
 rem NikolayCo SmartZill v2.0 - Windows Boot Script
-rem This file is saved as UTF-8 without BOM to prevent parsing errors.
-
 chcp 65001 > nul
 
 if "%1"=="min" goto :start
@@ -10,8 +8,12 @@ exit /b
 
 :start
 title SmartZill v2.0
-
 cd /d "%~dp0"
+
+:: VLC Configuration
+:: We use a specific version to ensure compatibility with python-vlc
+set "VLC_VERSION=3.0.21"
+set "VLC_URL=https://download.videolan.org/pub/videolan/vlc/%VLC_VERSION%/win64/vlc-%VLC_VERSION%-win64.zip"
 
 echo ==================================================
 echo   NikolayCo SmartZill v2.0 baslatiliyor...
@@ -27,7 +29,7 @@ rem Activate
 call .venv\Scripts\activate.bat
 
 rem Update Pip
-echo [*] Paket aracları guncelleniyor...
+echo [*] Paket araclari guncelleniyor...
 python -m pip install --upgrade pip setuptools wheel -q
 
 rem VLC Check
@@ -45,7 +47,8 @@ if exist "%VLC_PATH%" goto :vlc_ok
 
 echo [!] VLC Player bulunamadi! Portatif surum indiriliyor...
 if not exist "bin" mkdir "bin"
-powershell -Command "Invoke-WebRequest -Uri 'https://download.videolan.org/pub/videolan/vlc/3.0.21/win64/vlc-3.0.21-win64.zip' -OutFile 'vlc.zip'"
+echo [*] VLC v%VLC_VERSION% indiriliyor...
+powershell -Command "Invoke-WebRequest -Uri '%VLC_URL%' -OutFile 'vlc.zip'"
 echo [*] Dosyalar cikariliyor...
 powershell -Command "Expand-Archive -Path 'vlc.zip' -DestinationPath 'bin' -Force"
 del vlc.zip
@@ -58,7 +61,8 @@ for /d %%i in (bin\vlc-*) do (
 
 if exist "bin\vlc\libvlc.dll" (
     set "SMARTZILL_VLC_PATH=%~dp0bin\vlc"
-    echo [OK] Portatif VLC hazır.
+    echo [OK] Portatif VLC hazir.
+
 ) else (
     echo [!] HATA: VLC dosyalari cikarilamadi.
 )
