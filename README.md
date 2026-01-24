@@ -6,18 +6,6 @@
 <img width="1919" height="792" alt="image" src="https://github.com/user-attachments/assets/b0507998-f557-451d-bcfa-7c75d1228646" />
 
 
-<img width="1917" height="607" alt="image" src="https://github.com/user-attachments/assets/56806197-b7e8-4f5c-8474-7b554a785689" />
-
-
-<img width="1914" height="683" alt="image" src="https://github.com/user-attachments/assets/0296d228-20a8-4365-b2b8-4f9275ee1a09" />
-
-
-<img width="1912" height="912" alt="image" src="https://github.com/user-attachments/assets/9b92279e-1084-42af-aeba-2a96014f235f" />
-
-
-<img width="1916" height="691" alt="image" src="https://github.com/user-attachments/assets/44ecf769-7898-426e-baed-529c35d507e3" />
-
-
 ---
 
 ## 🇹🇷 Türkçe (Turkish)
