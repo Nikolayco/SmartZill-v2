@@ -36,7 +36,11 @@ class SchedulerService:
         # Durum
         self.current_state = "idle"  # idle, in_activity
         self.next_event: Optional[dict] = None
-        self.last_triggered_event: Optional[str] = None
+        
+        # Tetiklenen etkinlik takibi (dakika bazlı)
+        self.last_minute_str: Optional[str] = None
+        self.triggered_events_this_minute: set = set()
+        
         self.background_music_playing = False
         self.in_activity = False
         self.current_activity: Optional[dict] = None  # Şu anki aktif etkinlik
@@ -91,6 +95,12 @@ class SchedulerService:
         current_time = now.strftime("%H:%M")
         day_of_week = now.weekday()
         
+        # Dakika değiştiyse tetiklenen etkinlikleri temizle
+        now_minute_str = now.strftime("%Y%m%d_%H%M")
+        if self.last_minute_str != now_minute_str:
+            self.last_minute_str = now_minute_str
+            self.triggered_events_this_minute.clear()
+        
         # Bugünün programını al
         today_schedule = self._get_day_schedule(day_of_week)
         
@@ -114,25 +124,31 @@ class SchedulerService:
             # Başlangıç zamanı
             start_time = activity.get("startTime", "")
             if start_time == current_time:
-                event_key = f"{activity_id}_start_{now.strftime('%Y%m%d')}"
-                if self.last_triggered_event != event_key:
-                    self.last_triggered_event = event_key
+                event_key = f"{activity_id}_start"
+                if event_key not in self.triggered_events_this_minute:
+                    self.triggered_events_this_minute.add(event_key)
                     self._trigger_activity_start(activity)
             
             # Bitiş zamanı
             end_time = activity.get("endTime", "")
             if end_time == current_time:
-                event_key = f"{activity_id}_end_{now.strftime('%Y%m%d')}"
-                if self.last_triggered_event != event_key:
-                    self.last_triggered_event = event_key
+                event_key = f"{activity_id}_end"
+                if event_key not in self.triggered_events_this_minute:
+                    self.triggered_events_this_minute.add(event_key)
                     self._trigger_activity_end(activity)
             
             # Ara anonslar
-            for interim in activity.get("interimAnnouncements", []):
-                if interim.get("enabled") and interim.get("time") == current_time:
-                    interim_key = f"{interim.get('id', '')}_interim_{now.strftime('%Y%m%d')}"
-                    if self.last_triggered_event != interim_key:
-                        self.last_triggered_event = interim_key
+            # Önce 'announcements' (yeni format), yoksa 'interimAnnouncements' (eski format)
+            anns = activity.get("announcements") or activity.get("interimAnnouncements", [])
+            for interim in anns:
+                # enabled varsayılan True olsun
+                if interim.get("enabled", True) and interim.get("time") == current_time:
+                    sound_id = interim.get("soundId", "")
+                    # Benzersiz anahtar oluştur
+                    interim_key = f"{activity_id}_interim_{sound_id}_{interim.get('time')}"
+                    
+                    if interim_key not in self.triggered_events_this_minute:
+                        self.triggered_events_this_minute.add(interim_key)
                         self._trigger_interim(interim)
         
         # Doğum günü kontrolü
