@@ -41,6 +41,7 @@ import sys
 # Proje kök dizinini path'e ekle
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import load_config, save_config, BELLS_DIR, ANNOUNCEMENTS_DIR, MUSIC_DIR
+import random
 
 
 class AudioChannel:
@@ -54,36 +55,121 @@ class AudioChannel:
         self.is_paused = False
         self.current_source: Optional[str] = None
         
-    def play(self, source: str, is_stream: bool = False) -> bool:
+        # Playlist desteği
+        self.playlist: list = []
+        self.playlist_index: int = 0
+        self.shuffle: bool = False
+        self.is_playlist_mode: bool = False
+        
+        # Thread safety
+        self.lock = threading.RLock()
+        
+    def play(self, source: str, is_stream: bool = False, is_playlist_track: bool = False) -> bool:
         """Ses kaynağını oynatır"""
-        try:
-            self.stop()
+        with self.lock:
+            try:
+                # Playlist modu değilse ve yeni bir tekli dosya çağrıldıysa playlist'i temizle
+                if not is_playlist_track:
+                    self.playlist = []
+                    self.is_playlist_mode = False
+                
+                self.stop(stop_playlist=not is_playlist_track)
+                
+                if is_stream:
+                    media = self.instance.media_new(source)
+                else:
+                    if not os.path.exists(source):
+                        print(f"[{self.name}] Dosya bulunamadı: {source}")
+                        return False
+                    media = self.instance.media_new_path(source)
+                
+                self.player = self.instance.media_player_new()
+                self.player.set_media(media)
+                self.player.audio_set_volume(self.volume)
+                
+                # Parça bitiş olayını dinle
+                event_manager = self.player.event_manager()
+                event_manager.event_attach(vlc.EventType.MediaPlayerEndReached, self._on_track_end)
+                
+                self.player.play()
+                self.current_source = source
+                self.is_paused = False
+                
+                # Oynatma başlamasını bekle
+                time.sleep(0.1)
+                return True
+                
+            except Exception as e:
+                print(f"[{self.name}] Oynatma hatası: {e}")
+                return False
             
-            if is_stream:
-                media = self.instance.media_new(source)
-            else:
-                if not os.path.exists(source):
-                    print(f"[{self.name}] Dosya bulunamadı: {source}")
-                    return False
-                media = self.instance.media_new_path(source)
             
-            self.player = self.instance.media_player_new()
-            self.player.set_media(media)
-            self.player.audio_set_volume(self.volume)
-            self.player.play()
-            self.current_source = source
-            self.is_paused = False
+    def play_playlist(self, files: list, shuffle: bool = False) -> bool:
+        """Playlist oynatır"""
+        with self.lock:
+            if not files:
+                return False
+                
+            self.playlist = files.copy()
+            self.shuffle = shuffle
+            self.playlist_index = 0
+            self.is_playlist_mode = True
             
-            # Oynatma başlamasını bekle
-            time.sleep(0.1)
-            return True
+            if self.shuffle:
+                random.shuffle(self.playlist)
+                
+            # İlk parçayı oynat
+            return self.play(self.playlist[0], is_playlist_track=True)
+
+    def _on_track_end(self, event):
+        """Parça bittiğinde"""
+        if self.is_playlist_mode and self.playlist:
+            # Thread içinde bir sonraki parçayı tetikle
+            threading.Thread(target=self._play_next, daemon=True).start()
             
-        except Exception as e:
-            print(f"[{self.name}] Oynatma hatası: {e}")
-            return False
+    def _play_next(self):
+        """Sıradaki parçayı oynat"""
+        with self.lock:
+            if not self.is_playlist_mode:
+                return
+                
+            self.playlist_index += 1
+            
+            # Playlist bitti mi?
+            if self.playlist_index >= len(self.playlist):
+                if self.shuffle:
+                    # Tekrar karıştır ve başa dön (Sürekli döngü)
+                    random.shuffle(self.playlist)
+                    self.playlist_index = 0
+                else:
+                    # Düz listede başa dön
+                    self.playlist_index = 0
+            
+            if self.playlist:
+                next_file = self.playlist[self.playlist_index]
+                self.play(next_file, is_playlist_track=True)
     
-    def stop(self):
+    def stop(self, stop_playlist: bool = True):
         """Oynatmayı durdurur"""
+        # stop metodunda lock kullanmıyoruz çünkü play metodunun içinde çağrılıyor
+        # ve play metodu zaten kilitli. RLock recursive olsa da karışıklığı önlemek için
+        # çağrılan yer lock almalı. Ancak dışarıdan çağrılma ihtimaline karşı:
+        
+        # Eğer caller lock almamışsa biz alalım (basit kontrol zor, o yüzden RLock güvenli)
+        
+        # NOT: RLock aynı thread için kilitlemeye izin verir.
+        # play -> stop zincirinde sorun olmaz.
+        # Ancak dışarıdan doğrudan stop çağrıldığında kilit lazım.
+        
+        # Bu yüzden tüm bloklarda with self.lock kullanmak en güvenlisi (RLock sayesinde).
+        pass # Placeholder for replacement context, using full implementation below
+
+    def stop_safe(self, stop_playlist: bool = True):
+        # Gerçek stop mantığı
+        if stop_playlist:
+            self.is_playlist_mode = False
+            self.playlist = []
+            
         if self.player:
             try:
                 self.player.stop()
@@ -93,18 +179,25 @@ class AudioChannel:
             self.player = None
         self.is_paused = False
         self.current_source = None
-    
+
+    def stop(self, stop_playlist: bool = True):
+        """Oynatmayı durdurur"""
+        with self.lock:
+            self.stop_safe(stop_playlist)
+
     def pause(self):
         """Oynatmayı duraklatır"""
-        if self.player and self.is_playing():
-            self.player.pause()
-            self.is_paused = True
+        with self.lock:
+            if self.player and self.is_playing():
+                self.player.pause()
+                self.is_paused = True
     
     def resume(self):
         """Oynatmayı devam ettirir"""
-        if self.player and self.is_paused:
-            self.player.play()
-            self.is_paused = False
+        with self.lock:
+            if self.player and self.is_paused:
+                self.player.play()
+                self.is_paused = False
     
     def set_volume(self, volume: int):
         """Ses seviyesini ayarlar (0-100)"""
@@ -266,6 +359,24 @@ class AudioEngine:
             else:
                 path = self._resolve_path(source, MUSIC_DIR)
                 return self.channels["music"].play(path)
+
+    def play_music_playlist(self, files: list) -> bool:
+        """
+        Mola müziği playlisti çalar (Her zaman karışık)
+        """
+        if self.channels["bell"].is_playing() or self.channels["announcement"].is_playing():
+            return False
+            
+        # Dosya yollarını tam yola çevir
+        full_paths = []
+        for f in files:
+            path = self._resolve_path(f, MUSIC_DIR)
+            if path:
+                full_paths.append(path)
+                
+        with self.lock:
+            # Mola müziği her zaman karışık çalmalı
+            return self.channels["music"].play_playlist(full_paths, shuffle=True)
     
     def stop_music(self):
         """Mola müziğini durdurur"""

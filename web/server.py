@@ -683,9 +683,8 @@ def _start_break_music():
                    if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a")]
     
     if music_files:
-        import random
-        random.shuffle(music_files)
-        audio_engine.play_music(music_files[0])
+        # Playlist olarak karışık çal (Her zaman karışık)
+        audio_engine.play_music_playlist(music_files)
 
 
 # ===== SYSTEM CONTROL =====
