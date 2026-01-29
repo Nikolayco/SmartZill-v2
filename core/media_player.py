@@ -9,6 +9,7 @@ import threading
 from pathlib import Path
 from typing import Optional, List
 import sys
+import platform
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import load_config, save_config, MUSIC_DIR
@@ -121,7 +122,13 @@ class MediaPlayer:
             
             self.player = self.instance.media_player_new()
             self.player.set_media(media)
-            self.player.audio_set_volume(self.volume)
+            # Windows VLC uses 0-255 volume range, map our 0-100 to that range
+            if platform.system() == "Windows":
+                adjusted_volume = int((self.volume / 100) * 255)
+                adjusted_volume = max(0, min(255, adjusted_volume))
+                self.player.audio_set_volume(adjusted_volume)
+            else:
+                self.player.audio_set_volume(self.volume)
             
             # Parça bittiğinde callback
             event_manager = self.player.event_manager()
@@ -272,7 +279,12 @@ class MediaPlayer:
         """Ses seviyesini ayarlar (0-100)"""
         self.volume = max(0, min(100, volume))
         if self.player:
-            self.player.audio_set_volume(self.volume)
+            if platform.system() == "Windows":
+                adjusted_volume = int((self.volume / 100) * 255)
+                adjusted_volume = max(0, min(255, adjusted_volume))
+                self.player.audio_set_volume(adjusted_volume)
+            else:
+                self.player.audio_set_volume(self.volume)
         
         # Yapılandırmaya kaydet
         config = load_config()

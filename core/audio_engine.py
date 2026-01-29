@@ -61,9 +61,7 @@ class AudioChannel:
     
     def __init__(self, name: str, volume: int = 100):
         self.name = name
-        # Windows'ta müzik kanalı varsayılan olarak daha yüksek sesle başlasın (80)
-        if platform.system() == "Windows" and name == "music" and volume == 60:
-            volume = 80
+        # Varsayılan hacim yapılandırmasına sadık kalınır. Windows için özel "otomatik artış" kaldırıldı.
         self.volume = max(0, min(100, volume))
         self.player: Optional[vlc.MediaPlayer] = None
         # Windows'ta extra ses seçenekleri
@@ -123,10 +121,10 @@ class AudioChannel:
                 self.player = self.instance.media_player_new()
                 self.player.set_media(media)
                 
-                # Windows'ta ses seviyesi ayarlaması
+                # Windows'ta ses seviyesi 0-255 arasında çalıştığı için 0-100 aralığını map et
                 if platform.system() == "Windows":
-                    adjusted_volume = min(255, int((self.volume / 100) * 255))
-                    adjusted_volume = max(100, adjusted_volume)
+                    adjusted_volume = int((self.volume / 100) * 255)
+                    adjusted_volume = max(0, min(255, adjusted_volume))
                     self.player.audio_set_volume(adjusted_volume)
                 else:
                     self.player.audio_set_volume(self.volume)
@@ -256,14 +254,10 @@ class AudioChannel:
         """Ses seviyesini ayarlar (0-100)"""
         self.volume = max(0, min(100, volume))
         if self.player:
-            # Windows'ta ses seviyesi ek artırım gerekebiliyor (0-255 arası)
-            # Linux'ta doğru şekilde 0-100 arasında çalışıyor
+            # Windows'ta ses seviyesi 0-255 aralığına map edilir; minimum zorlama kaldırıldı
             if platform.system() == "Windows":
-                # Windows VLC: 0-255 aralığında, 170 = %67, 230 = %90
-                # 60 ses seviyesi -> 170 ile 100 olmasını sağla
-                adjusted_volume = min(255, int((self.volume / 100) * 255))
-                # Minimum 100 (çok kısık sesleri engelle)
-                adjusted_volume = max(100, adjusted_volume)
+                adjusted_volume = int((self.volume / 100) * 255)
+                adjusted_volume = max(0, min(255, adjusted_volume))
                 self.player.audio_set_volume(adjusted_volume)
             else:
                 # Linux/Mac: 0-100 aralığında, doğru şekilde çalışıyor
