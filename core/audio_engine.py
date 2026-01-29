@@ -9,10 +9,21 @@ if platform.system() == "Windows":
     # Öncelik: Çevre değişkeni -> Proje içi bin/vlc -> Standart yollar
     vlc_local_path = os.environ.get("SMARTZILL_VLC_PATH")
     if not vlc_local_path:
+        # Öncelik: proje içindeki portatif VLC (bin/vlc)
         local_vlc_dir = ROOT / "bin" / "vlc"
         if local_vlc_dir.exists():
             vlc_local_path = str(local_vlc_dir)
-            
+
+    # Eğer SMARTZILL_VLC_PATH veya bin/vlc yoksa, Windows'un yaygın kurulum yolunu dene
+    if not vlc_local_path:
+        try:
+            prog = os.environ.get('PROGRAMFILES', r"C:\Program Files")
+            common = os.path.join(prog, 'VideoLAN', 'VLC')
+            if os.path.exists(common):
+                vlc_local_path = common
+        except Exception:
+            pass
+
     if vlc_local_path and os.path.exists(vlc_local_path):
         dll_path = os.path.join(vlc_local_path, "libvlc.dll")
         if os.path.exists(dll_path):
@@ -56,10 +67,16 @@ class AudioChannel:
         self.volume = max(0, min(100, volume))
         self.player: Optional[vlc.MediaPlayer] = None
         # Windows'ta extra ses seçenekleri
-        if platform.system() == "Windows":
-            self.instance = vlc.Instance("--quiet", "--alsa-mixer-index=-1")
-        else:
-            self.instance = vlc.Instance("--no-xlib", "--quiet")
+        try:
+            if platform.system() == "Windows":
+                # Windows'ta ALSA seçenekleri yok; yalnızca sessiz modu kullan
+                self.instance = vlc.Instance("--quiet")
+            else:
+                self.instance = vlc.Instance("--no-xlib", "--quiet")
+        except Exception as e:
+            # VLC instance oluşturulamadığında None ata ve hata mesajı yaz
+            print(f"[{self.name}] Uyarı: VLC instance oluşturulamadı: {e}")
+            self.instance = None
         self.is_paused = False
         self.current_source: Optional[str] = None
         
@@ -78,11 +95,16 @@ class AudioChannel:
         """Ses kaynağını oynatır"""
         with self.lock:
             try:
+                # Eğer VLC instance oluşturulmamışsa oynatma desteklenmiyor
+                if not self.instance:
+                    print(f"[{self.name}] Hata: VLC instance mevcut değil, oynatma yapılamıyor")
+                    return False
+
                 # Playlist modu değilse ve yeni bir tekli dosya çağrıldıysa playlist'i temizle
                 if not is_playlist_track:
                     self.playlist = []
                     self.is_playlist_mode = False
-                
+
                 self.stop(stop_playlist=not is_playlist_track)
 
                 # Eğer kaynak geçersizse (None veya boş) sessizce başarısız ol
@@ -110,8 +132,12 @@ class AudioChannel:
                     self.player.audio_set_volume(self.volume)
                 
                 # Parça bitiş olayını dinle
-                event_manager = self.player.event_manager()
-                event_manager.event_attach(vlc.EventType.MediaPlayerEndReached, self._on_track_end)
+                try:
+                    event_manager = self.player.event_manager()
+                    event_manager.event_attach(vlc.EventType.MediaPlayerEndReached, self._on_track_end)
+                except Exception as e:
+                    # Event attach hatası oyun içinde test harness'larından veya mock'lardan kaynaklanabilir
+                    print(f"[{self.name}] Uyarı: event_attach başarısız: {e}")
 
                 # Not: MediaPlayerEncounteredError event'ine bağlanmak test harness'ını
                 # etkileyebildiği için bu projede doğrudan event'e bağlanmıyoruz.
@@ -121,8 +147,8 @@ class AudioChannel:
                 self.current_source = source
                 self.is_paused = False
                 
-                # Oynatma başlamasını bekle
-                time.sleep(0.1)
+                # Oynatma başlamasını bekle (biraz daha uzun bekle, testlerde kararlılık için)
+                time.sleep(0.25)
                 return True
                 
             except Exception as e:
@@ -501,6 +527,43 @@ class AudioEngine:
                 return False
         return True
 
+    def preflight_check(self) -> dict:
+        """Ortamın çalışması için gerekli bağımlılıkları kontrol eder.
+        Döndürür: {"ok": bool, "messages": [str]}
+        """
+        messages = []
+        ok = True
+
+        # Her kanal için VLC instance kontrolü
+        for name, ch in self.channels.items():
+            try:
+                if ch.instance is None:
+                    messages.append(f"[preflight] Kanal '{name}': VLC instance yok veya yüklenemedi")
+                    ok = False
+            except Exception:
+                messages.append(f"[preflight] Kanal '{name}': durum alınamadı")
+                ok = False
+
+        # Windows için libvlc kontrolü
+        if platform.system() == "Windows":
+            # SMARTZILL_VLC_PATH veya yaygın kurulum yollarını kontrol et
+            vlc_path = os.environ.get("SMARTZILL_VLC_PATH")
+            found = False
+            if vlc_path and os.path.exists(vlc_path):
+                dll_path = os.path.join(vlc_path, "libvlc.dll")
+                if os.path.exists(dll_path):
+                    found = True
+            # Yaygın kurulum klasörü
+            prog = os.environ.get("PROGRAMFILES", r"C:\\Program Files")
+            common = os.path.join(prog, "VideoLAN", "VLC")
+            if os.path.exists(os.path.join(common, "libvlc.dll")):
+                found = True
+
+            if not found:
+                messages.append("[preflight] Windows: libvlc bulunamadı. SMARTZILL_VLC_PATH ortam değişkenini ayarlayın veya VLC yükleyin: https://www.videolan.org/")
+                ok = False
+
+        return {"ok": ok, "messages": messages}
     def handle_channel_error(self, channel_name: str, source: Optional[str]):
         """Bir kanal hata verdiğinde çağrılır (ör. medya oynatıcı hata)"""
         try:

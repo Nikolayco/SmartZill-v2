@@ -261,6 +261,17 @@ def main():
         from services.holidays import holiday_service
         from services.birthdays import birthday_service
         print("✅ Tüm modüller yüklendi")
+
+        # Preflight kontrolü: VLC ve diğer kritik bağımlılıklar
+        try:
+            pf = audio_engine.preflight_check()
+            if not pf.get("ok"):
+                print("[Preflight] Uyarılar tespit edildi:")
+                for m in pf.get("messages", []):
+                    print("  -", m)
+                print("[Preflight] Lütfen eksikleri giderin. Windows için SMARTZILL_VLC_PATH ayarlamak veya VLC kurmak genellikle sorunu çözer.")
+        except Exception as e:
+            print(f"[Preflight] Kontrol sırasında hata: {e}")
     except Exception as e:
         print(f"❌ Modül yükleme hatası: {e}")
         sys.exit(1)
