@@ -657,11 +657,35 @@ async def startup():
     print(f"  http://{WEB_HOST}:{WEB_PORT}")
     print("=" * 50)
     
-    # Zamanlayıcıyı başlat
-    scheduler.on_bell = lambda f: audio_engine.play_bell(f, blocking=True)
-    scheduler.on_announcement = lambda f: audio_engine.play_announcement(f, blocking=True)
-    scheduler.on_music_start = lambda: _start_break_music()
-    scheduler.on_music_stop = lambda: audio_engine.stop_music()
+    # Zamanlayıcıyı başlat - hata handling ile
+    def safe_bell(f):
+        try:
+            audio_engine.play_bell(f, blocking=True)
+        except Exception as e:
+            print(f"[Server] Zil hatası: {e}")
+    
+    def safe_announcement(f):
+        try:
+            audio_engine.play_announcement(f, blocking=True)
+        except Exception as e:
+            print(f"[Server] Anons hatası: {e}")
+    
+    def safe_music_start():
+        try:
+            _start_break_music()
+        except Exception as e:
+            print(f"[Server] Müzik başlatma hatası: {e}")
+    
+    def safe_music_stop():
+        try:
+            audio_engine.stop_music()
+        except Exception as e:
+            print(f"[Server] Müzik durdurma hatası: {e}")
+    
+    scheduler.on_bell = safe_bell
+    scheduler.on_announcement = safe_announcement
+    scheduler.on_music_start = safe_music_start
+    scheduler.on_music_stop = safe_music_stop
     scheduler.holiday_checker = holiday_service.is_holiday_today
     scheduler.is_manual_player_active = lambda: media_player.is_playing()
     scheduler.birthday_checker = birthday_service.should_announce_now
@@ -670,21 +694,32 @@ async def startup():
 
 def _start_break_music():
     """Mola müziğini başlat (radyo veya yerel)"""
-    config = load_config()
-    radio_config = config.get("radio", {})
-    
-    if radio_config.get("enabled") and radio_config.get("url"):
-        # Radyo dene
-        if audio_engine.play_music(radio_config["url"], is_stream=True):
-            return
-    
-    # Yerel müziklere geç
-    music_files = [f.name for f in MUSIC_DIR.iterdir() 
-                   if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a")]
-    
-    if music_files:
-        # Playlist olarak karışık çal (Her zaman karışık)
-        audio_engine.play_music_playlist(music_files)
+    try:
+        config = load_config()
+        radio_config = config.get("radio", {})
+        
+        if radio_config.get("enabled") and radio_config.get("url"):
+            # Radyo dene
+            if audio_engine.play_music(radio_config["url"], is_stream=True):
+                print("[Server] Radyo başlatıldı")
+                return
+        
+        # Yerel müziklere geç
+        music_files = [f.name for f in MUSIC_DIR.iterdir() 
+                       if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a")]
+        
+        if music_files:
+            # Playlist olarak karışık çal (Her zaman karışık)
+            if audio_engine.play_music_playlist(music_files):
+                print(f"[Server] Müzik listesi başlatıldı ({len(music_files)} dosya)")
+                return
+        
+        # Fallback: Sistem default sesini çal
+        print("[Server] Müzik dosyası bulunamadı, sistem sesi çalınıyor")
+        audio_engine.play_music("sounds/system/default.mp3", is_stream=False)
+        
+    except Exception as e:
+        print(f"[Server] Mola müziği başlatma hatası: {e}")
 
 
 # ===== SYSTEM CONTROL =====

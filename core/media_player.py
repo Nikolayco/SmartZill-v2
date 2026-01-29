@@ -175,7 +175,7 @@ class MediaPlayer:
         self.radio_reconnect_thread.start()
     
     def _reconnect_loop(self):
-        """Radyo yeniden bağlanma döngüsü"""
+        """Radyo yeniden bağlanma döngüsü - başarısızsa yerel müziklere geç"""
         import time
         attempts = 0
         max_attempts = 10
@@ -193,7 +193,21 @@ class MediaPlayer:
                     print("[MediaPlayer] Radyo bağlantısı yeniden kuruldu")
                     return
         
-        print("[MediaPlayer] Radyo bağlantısı kurulamadı")
+        # Radyo bağlantısı başarısız - yerel müziklere fallback
+        print("[MediaPlayer] Radyo bağlantısı kurulamadı, yerel müziklere geçiliyor")
+        try:
+            from pathlib import Path
+            music_files = [str(f) for f in MUSIC_DIR.iterdir() 
+                          if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a")]
+            
+            if music_files:
+                import random
+                random.shuffle(music_files)
+                with self.lock:
+                    self._play_source(music_files[0], "file")
+                    print("[MediaPlayer] Yerel müzik oynatılıyor")
+        except Exception as e:
+            print(f"[MediaPlayer] Fallback hatası: {e}")
     
     def stop(self):
         """Oynatmayı durdurur"""

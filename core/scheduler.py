@@ -260,47 +260,53 @@ class SchedulerService:
     
     def _manage_background_music(self, activities: list, current_time: str):
         """Arka plan müziğini yönetir - etkinlik sonrası molada çalar"""
-        # Manuel player aktifse dokunma
-        if self.is_manual_player_active and self.is_manual_player_active():
-            return
-        
-        # Herhangi bir etkinlik içinde miyiz?
-        in_any_activity = False
-        
-        for activity in activities:
-            start = activity.get("startTime", "")
-            end = activity.get("endTime", "")
+        with self.lock:
+            # Manuel player aktifse dokunma
+            if self.is_manual_player_active and self.is_manual_player_active():
+                return
             
-            if start <= current_time < end:
-                in_any_activity = True
-                break
-        
-        # Etkinlik içindeyse müziği durdur
-        if in_any_activity:
-            if self.background_music_playing:
-                self._stop_background_music()
-        else:
-            # Etkinlik dışında (mola) - en son biten etkinliği bul
-            # Eğer last_ended_activity yoksa, şu anki zamandan önce biten son etkinliği bul
-            if not self.last_ended_activity:
-                for activity in sorted(activities, key=lambda x: x.get("endTime", ""), reverse=True):
-                    if activity.get("endTime", "") <= current_time:
-                        self.last_ended_activity = activity
-                        break
+            # Herhangi bir etkinlik içinde miyiz?
+            in_any_activity = False
+            active_activity = None
             
-            # Son biten etkinliğin playMusic ayarını kontrol et
-            if self.last_ended_activity and self.last_ended_activity.get("playMusic", False):
-                # playMusic=true ise müzik çalmalı
-                if not self.background_music_playing:
-                    print("[Scheduler] Mola sırasında müzik başlatılıyor (son etkinlik playMusic=true)")
-                    self._start_background_music()
-            else:
-                # playMusic=false veya hiç etkinlik bitmediyse müzik çalmamalı
+            for activity in activities:
+                start = activity.get("startTime", "")
+                end = activity.get("endTime", "")
+                
+                if start <= current_time < end:
+                    in_any_activity = True
+                    active_activity = activity
+                    break
+            
+            # Etkinlik içindeyse müziği durdur
+            if in_any_activity:
                 if self.background_music_playing:
                     self._stop_background_music()
+            else:
+                # Etkinlik dışında (mola) - en son biten etkinliği bul
+                # Yeni etkinliğe girildiyse last_ended_activity güncelle
+                if active_activity and self.current_activity != active_activity:
+                    self.last_ended_activity = active_activity
+                elif not active_activity and not self.last_ended_activity:
+                    # Hiç etkinlik bitmediyse, şu anki zamandan önce biten son etkinliği bul
+                    for activity in sorted(activities, key=lambda x: x.get("endTime", ""), reverse=True):
+                        if activity.get("endTime", "") <= current_time:
+                            self.last_ended_activity = activity
+                            break
+                
+                # Son biten etkinliğin playMusic ayarını kontrol et
+                if self.last_ended_activity and self.last_ended_activity.get("playMusic", False):
+                    # playMusic=true ise müzik çalmalı
+                    if not self.background_music_playing:
+                        print("[Scheduler] Mola sırasında müzik başlatılıyor (son etkinlik playMusic=true)")
+                        self._start_background_music()
+                else:
+                    # playMusic=false veya hiç etkinlik bitmediyse müzik çalmamalı
+                    if self.background_music_playing:
+                        self._stop_background_music()
     
     def _start_background_music(self):
-        """Arka plan müziğini başlatır"""
+        """Arka plan müziğini başlatır (lock için _manage_background_music içinde çağrılmalı)"""
         if self.background_music_playing:
             return
         
@@ -309,19 +315,25 @@ class SchedulerService:
             return
         
         print("[Scheduler] Arka plan müziği başlatılıyor")
-        if self.on_music_start:
-            self.on_music_start()
-            self.background_music_playing = True
+        try:
+            if self.on_music_start:
+                self.on_music_start()
+                self.background_music_playing = True
+        except Exception as e:
+            print(f"[Scheduler] Müzik başlatma hatası: {e}")
     
     def _stop_background_music(self):
-        """Arka plan müziğini durdurur"""
+        """Arka plan müziğini durdurur (lock için _manage_background_music içinde çağrılmalı)"""
         if not self.background_music_playing:
             return
         
         print("[Scheduler] Arka plan müziği durduruluyor")
-        if self.on_music_stop:
-            self.on_music_stop()
-            self.background_music_playing = False
+        try:
+            if self.on_music_stop:
+                self.on_music_stop()
+                self.background_music_playing = False
+        except Exception as e:
+            print(f"[Scheduler] Müzik durdurma hatası: {e}")
     
     def _find_next_event(self, activities: list, current_time: str) -> Optional[dict]:
         """Sonraki etkinliği bulur"""

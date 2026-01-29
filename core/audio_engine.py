@@ -34,6 +34,7 @@ import vlc
 import time
 import threading
 import os
+import platform
 from pathlib import Path
 from typing import Optional, Callable
 import sys
@@ -49,9 +50,16 @@ class AudioChannel:
     
     def __init__(self, name: str, volume: int = 100):
         self.name = name
+        # Windows'ta müzik kanalı varsayılan olarak daha yüksek sesle başlasın (80)
+        if platform.system() == "Windows" and name == "music" and volume == 60:
+            volume = 80
         self.volume = max(0, min(100, volume))
         self.player: Optional[vlc.MediaPlayer] = None
-        self.instance = vlc.Instance("--no-xlib", "--quiet")
+        # Windows'ta extra ses seçenekleri
+        if platform.system() == "Windows":
+            self.instance = vlc.Instance("--quiet", "--alsa-mixer-index=-1")
+        else:
+            self.instance = vlc.Instance("--no-xlib", "--quiet")
         self.is_paused = False
         self.current_source: Optional[str] = None
         
@@ -85,7 +93,14 @@ class AudioChannel:
                 
                 self.player = self.instance.media_player_new()
                 self.player.set_media(media)
-                self.player.audio_set_volume(self.volume)
+                
+                # Windows'ta ses seviyesi ayarlaması
+                if platform.system() == "Windows":
+                    adjusted_volume = min(255, int((self.volume / 100) * 255))
+                    adjusted_volume = max(100, adjusted_volume)
+                    self.player.audio_set_volume(adjusted_volume)
+                else:
+                    self.player.audio_set_volume(self.volume)
                 
                 # Parça bitiş olayını dinle
                 event_manager = self.player.event_manager()
@@ -203,7 +218,18 @@ class AudioChannel:
         """Ses seviyesini ayarlar (0-100)"""
         self.volume = max(0, min(100, volume))
         if self.player:
-            self.player.audio_set_volume(self.volume)
+            # Windows'ta ses seviyesi ek artırım gerekebiliyor (0-255 arası)
+            # Linux'ta doğru şekilde 0-100 arasında çalışıyor
+            if platform.system() == "Windows":
+                # Windows VLC: 0-255 aralığında, 170 = %67, 230 = %90
+                # 60 ses seviyesi -> 170 ile 100 olmasını sağla
+                adjusted_volume = min(255, int((self.volume / 100) * 255))
+                # Minimum 100 (çok kısık sesleri engelle)
+                adjusted_volume = max(100, adjusted_volume)
+                self.player.audio_set_volume(adjusted_volume)
+            else:
+                # Linux/Mac: 0-100 aralığında, doğru şekilde çalışıyor
+                self.player.audio_set_volume(self.volume)
     
     def is_playing(self) -> bool:
         """Oynatma durumunu kontrol eder"""
@@ -318,16 +344,18 @@ class AudioEngine:
     def play_announcement(self, filename: str, blocking: bool = True) -> bool:
         """
         Anons çalar
-        Müziği duraklatır, zil çalarken bekler
+        Müziği duraklatır, anons bittiğinde devam ettirir
+        Zil çalıyorsa zil bitene kadar bekle
         """
         # Zil çalıyorsa bekle
         while self.channels["bell"].is_playing():
             time.sleep(0.1)
         
         with self.lock:
-            # Müzik çalıyorsa duraklat
-            if self.channels["music"].is_playing():
-                self._music_was_playing = True
+            # Müzik çalıyorsa duraklat (flag'i kontrol et)
+            music_was_playing = False
+            if self.channels["music"].is_playing() and not self._music_was_playing:
+                music_was_playing = True
                 self.channels["music"].pause()
             
             # Anonsu çal
@@ -339,9 +367,9 @@ class AudioEngine:
                 time.sleep(0.1)
             
             with self.lock:
-                if self._music_was_playing:
+                # Müziği devam ettir (eğer arka planda çalıyordu)
+                if music_was_playing:
                     self.channels["music"].resume()
-                    self._music_was_playing = False
         
         return success
     
@@ -363,8 +391,15 @@ class AudioEngine:
     def play_music_playlist(self, files: list) -> bool:
         """
         Mola müziği playlisti çalar (Her zaman karışık)
+        Zil veya anons çalıyorsa başlatmaz
+        Zaten müzik çalıyorsa yeni playlist başlatmaz
         """
         if self.channels["bell"].is_playing() or self.channels["announcement"].is_playing():
+            return False
+        
+        # Zaten müzik çalıyorsa yeni playlist başlatma (müzik devam etsin)
+        if self.channels["music"].is_playing() and self.channels["music"].is_playlist_mode:
+            print("[AudioEngine] Müzik zaten çalıyor, yeni playlist başlatılmıyor")
             return False
             
         # Dosya yollarını tam yola çevir
@@ -373,6 +408,10 @@ class AudioEngine:
             path = self._resolve_path(f, MUSIC_DIR)
             if path:
                 full_paths.append(path)
+        
+        if not full_paths:
+            print("[AudioEngine] Çalınacak müzik dosyası bulunamadı")
+            return False
                 
         with self.lock:
             # Mola müziği her zaman karışık çalmalı
