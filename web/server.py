@@ -681,7 +681,25 @@ async def startup():
             audio_engine.stop_music()
         except Exception as e:
             print(f"[Server] Müzik durdurma hatası: {e}")
-    
+    def safe_music_error(channel_name, source):
+        """Radyo akýþý başarýsýz olursa yerel MP3lere otomatik geçiş yapar"""
+        try:
+            # Yalnýzca radyo türü kaynaklarda fallback uygula
+            if not source or not isinstance(source, str):
+                print("[Server] Müzik hata kaynağı uygun değil, fallback atlandı")
+                return
+
+            # Basitçe URL içeren kaynakları radyo olarak kabul et
+            if source.startswith("http://") or source.startswith("https://") or "://" in source:
+                print(f"[Server] Radyo akışı başarısız ({source}), yerel MP3'lere geçiliyor")
+                music_files = [str(f) for f in MUSIC_DIR.iterdir() if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a")]
+                if music_files:
+                    audio_engine.play_music_playlist(music_files)
+                    print(f"[Server] Yerel müzik listesi başlatıldı ({len(music_files)} dosya)")
+                else:
+                    print("[Server] Radyo başarısız ve yerel müzik bulunamadı")
+        except Exception as e:
+            print(f"[Server] Müzik fallback hatası: {e}")    
     scheduler.on_bell = safe_bell
     scheduler.on_announcement = safe_announcement
     scheduler.on_music_start = safe_music_start
@@ -689,6 +707,13 @@ async def startup():
     scheduler.holiday_checker = holiday_service.is_holiday_today
     scheduler.is_manual_player_active = lambda: media_player.is_playing()
     scheduler.birthday_checker = birthday_service.should_announce_now
+
+    # Radyo akışı başarısız olursa yerel MP3 fallback davranışı
+    try:
+        audio_engine.on_music_error = safe_music_error
+    except Exception as e:
+        print(f"[Server] on_music_error bağlanamadı: {e}")
+
     scheduler.start()
 
 
@@ -714,9 +739,22 @@ def _start_break_music():
                 print(f"[Server] Müzik listesi başlatıldı ({len(music_files)} dosya)")
                 return
         
-        # Fallback: Sistem default sesini çal
-        print("[Server] Müzik dosyası bulunamadı, sistem sesi çalınıyor")
-        audio_engine.play_music("sounds/system/default.mp3", is_stream=False)
+        # Fallback: Sistem ses dosyalarını kontrol et (öncelik: system_audio, sonra system)
+        system_audio_dir = SOUNDS_DIR / "system_audio"
+        system_dir = SOUNDS_DIR / "system"
+        found = False
+        for d in (system_audio_dir, system_dir):
+            if d.exists():
+                for f in d.iterdir():
+                    if f.suffix.lower() in (".mp3", ".wav", ".ogg", ".flac", ".m4a"):
+                        if audio_engine.play_music(str(f), is_stream=False):
+                            print(f"[Server] Sistem sesi çalındı: {f.name}")
+                            found = True
+                            break
+                if found:
+                    break
+        if not found:
+            print("[Server] Sistem ses dosyası bulunamadı, atlanıyor")
         
     except Exception as e:
         print(f"[Server] Mola müziği başlatma hatası: {e}")

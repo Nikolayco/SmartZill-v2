@@ -118,25 +118,35 @@ class SchedulerService:
         # Etkinlikleri kontrol et
         activities = today_schedule.get("activities", [])
         
+        # Toplanan olay listeleri (aynı dakikadaki olayların önceliğe göre işlenmesi için)
+        start_events: list = []
+        end_events: list = []
+        interim_events: list = []
+        # Müzik başlatma kararı, eğer herhangi bir biten etkinlik playMusic=true ise True olur
+        music_should_start = False
+
         for activity in activities:
             activity_id = activity.get("id", "")
-            
+
             # Başlangıç zamanı
             start_time = activity.get("startTime", "")
             if start_time == current_time:
                 event_key = f"{activity_id}_start"
                 if event_key not in self.triggered_events_this_minute:
                     self.triggered_events_this_minute.add(event_key)
-                    self._trigger_activity_start(activity)
-            
+                    start_events.append(activity)
+
             # Bitiş zamanı
             end_time = activity.get("endTime", "")
             if end_time == current_time:
                 event_key = f"{activity_id}_end"
                 if event_key not in self.triggered_events_this_minute:
                     self.triggered_events_this_minute.add(event_key)
-                    self._trigger_activity_end(activity)
-            
+                    end_events.append(activity)
+                    # Eğer bu etkinlik müzik istiyorsa, tick sonunda müzik başlatılmalı
+                    if activity.get("playMusic", False):
+                        music_should_start = True
+
             # Ara anonslar
             # Önce 'announcements' (yeni format), yoksa 'interimAnnouncements' (eski format)
             anns = activity.get("announcements") or activity.get("interimAnnouncements", [])
@@ -146,10 +156,52 @@ class SchedulerService:
                     sound_id = interim.get("soundId", "")
                     # Benzersiz anahtar oluştur
                     interim_key = f"{activity_id}_interim_{sound_id}_{interim.get('time')}"
-                    
+
                     if interim_key not in self.triggered_events_this_minute:
                         self.triggered_events_this_minute.add(interim_key)
-                        self._trigger_interim(interim)
+                        interim_events.append(interim)
+
+        # Doğum günü kontrolü - önce adları topla ama hemen çağırma (öncelik daha sonra)
+        birthday_names = []
+        if self.birthday_checker:
+            names = self.birthday_checker()
+            if names:
+                birthday_names.extend(names)
+
+        # Olayları öncelik sırasına göre işle
+        # 1) Etkinlik duyuruları (başlangıç, ardından bitiş)
+        for act in start_events:
+            try:
+                self._trigger_activity_start(act)
+            except Exception as e:
+                print(f"[Scheduler] Etkinlik başlangıç hatası: {e}")
+
+        for act in end_events:
+            try:
+                self._trigger_activity_end(act)
+            except Exception as e:
+                print(f"[Scheduler] Etkinlik bitiş hatası: {e}")
+
+        # 2) Etkinlik içindeki ara duyurular
+        for interim in interim_events:
+            try:
+                self._trigger_interim(interim)
+            except Exception as e:
+                print(f"[Scheduler] Ara anons hatası: {e}")
+
+        # 3) Doğum günü anonsları
+        for name in birthday_names:
+            try:
+                self._trigger_birthday(name)
+            except Exception as e:
+                print(f"[Scheduler] Doğum günü anons hatası: {e}")
+
+        # 4) Müzik başlatma (eğer gerekiyorsa)
+        if music_should_start:
+            try:
+                self._start_background_music()
+            except Exception as e:
+                print(f"[Scheduler] Müzik başlatma hatası (tick sonu): {e}")
         
         # Doğum günü kontrolü
         if self.birthday_checker:
@@ -218,16 +270,15 @@ class SchedulerService:
                 time.sleep(2)
             self.on_announcement(announcement_id)
         
-        # Etkinlik bitti - sadece playMusic=true ise müziği başlat
+        # Etkinlik bitti - müzik başlatma kararı tick içinde değerlendirilecek
         self.in_activity = False
         self.current_state = "idle"
         self.current_activity = None
         self.last_ended_activity = activity  # Son biten etkinliği sakla
         
-        # Sadece bu etkinliğin playMusic ayarı açıksa müziği başlat
+        # Müzik başlatma kararı artık _tick içinde toplanıp sıralamaya göre yapılacak
         if activity.get("playMusic", False):
-            print(f"[Scheduler] Etkinlik sonrası müzik başlatılıyor (playMusic=true)")
-            self._start_background_music()
+            print(f"[Scheduler] Etkinlik sonrası müzik işaretlendi (playMusic=true) - tick sonunda işlenecek")
         else:
             print(f"[Scheduler] Etkinlik sonrası müzik başlatılmıyor (playMusic=false)")
     
